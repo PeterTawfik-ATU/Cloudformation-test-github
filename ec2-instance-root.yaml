@@ -19,7 +19,7 @@ Resources:
       TemplateURL: !Ref SGTemplateURL
       Parameters:
         ApplicationName: !Ref AWS::StackName
-        VPCId: !GetAtt VPC.Outputs.VPCID
+        VPCId: !GetAtt VPC.Outputs.VPC
       TimeoutInMinutes: 5
 
   VPC:
@@ -27,7 +27,7 @@ Resources:
     Properties:
       TemplateURL: !Ref VPCIdURL
       Parameters:
-        ApplicationName: !Ref AWS::StackName
+        EnvironmentName: !Ref AWS::StackName
 
 
   EC2Instance:
