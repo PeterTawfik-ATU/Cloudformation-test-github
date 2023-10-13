@@ -1,3 +1,4 @@
+
 The most similar commands are
         bisect
         rev-list
@@ -542,4 +543,313 @@ To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
    b3485f5..ce12479  main -> main
 
 Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$
 
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 sync . s3://test202323232
+upload: .git\index to s3://test202323232/.git/index
+upload: .git\logs\HEAD to s3://test202323232/.git/logs/HEAD       
+upload: .git\logs\refs\remotes\origin\main to s3://test202323232/.git/logs/refs/remotes/origin/main
+upload: .git\objects\4f\76b29489bc8d1ac0b6987c8736eb3fcd28c06d to s3://test202323232/.git/objects/4f/76b29489bc8d1ac0b6987c8736eb3fcd28c06d
+upload: .git\objects\b4\6693bea9eafa4079855e27e8617b5a45d8e15e to s3://test202323232/.git/objects/b4/6693bea9eafa4079855e27e8617b5a45d8e15e
+upload: .git\refs\remotes\origin\main to s3://test202323232/.git/refs/remotes/origin/main
+upload: .git\refs\heads\main to s3://test202323232/.git/refs/heads/main
+upload: .git\objects\ce\124794b7b16a644f4d4fd8ec8f7dfd1cc83203 to s3://test202323232/.git/objects/ce/124794b7b16a644f4d4fd8ec8f7dfd1cc83203
+upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
+upload: .git\logs\refs\heads\main to s3://test202323232/.git/logs/refs/heads/main
+upload: .\vpc-nested.yaml to s3://test202323232/vpc-nested.yaml  
+upload: .\log.txt to s3://test202323232/log.txt
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/vpc-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/vpc-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T053206Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=f15830288257360217ab6c4f3266dc239c77d5bf43a67313cc9a5ca596465a98  
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ssh-security-group-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T053238Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=07f0c921a4929de357e41c49ff1c6813776794d7b279ab203ea4a58a43605a97
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T053244Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=dc64ef0d956162f3932670bcc18e878803bc0b54aed95f206fbdc990238eae92
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 sync . s3://test202323232
+upload: .\ssh-security-group-nested.yaml to s3://test202323232/ssh-security-group-nested.yaml
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T053556Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=273c487f6af292e95cf25be02d7a1eb4161b2195d63042924acf5a7ee12b3528
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ssh-security-group-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T053600Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=801cc62c5e5787fab3331772f6844116c3f9762085ccc1117d75e0d98205147d
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/vpc-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/vpc-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T053605Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d44c3ff47cf6d609da55900cc1c36c546b5d54a8b9f6ab580736a11cac593497  
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 sync . s3://test202323232
+upload: .\ec2-instance-root.yaml to s3://test202323232/ec2-instance-root.yaml
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T054043Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=f2ba4e6c64df1febd3647481c6a126b4467bdcf8f28720778c688ebc81324f06
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ssh-security-group-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T054046Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=883c81e31125c616050efd4c8c6f383f67e66b1f962ba9b2be3771b799ee7f35
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/vpc-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/vpc-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T054049Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=dc43a46e26e07a76194f7412230145d7af8fda242674e005599db2ac282350c1  
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 sync . s3://test202323232
+upload: .\ec2-instance-root.yaml to s3://test202323232/ec2-instance-root.yaml
+upload: .\vpc-nested.yaml to s3://test202323232/vpc-nested.yaml
+upload: .\ssh-security-group-nested.yaml to s3://test202323232/ssh-security-group-nested.yaml
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git add .
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git commit -m "fixing vpc references- vpc created successfully"
+[main 61572e5] fixing vpc references- vpc created successfully
+ 4 files changed, 309 insertions(+), 5 deletions(-)
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git push
+Enumerating objects: 11, done.
+Counting objects: 100% (11/11), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (6/6), 5.33 KiB | 5.33 MiB/s, done.
+Total 6 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
+   ce12479..61572e5  main -> main
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 sync . s3://test202323232
+upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
+upload: .git\logs\HEAD to s3://test202323232/.git/logs/HEAD        
+upload: .git\logs\refs\heads\main to s3://test202323232/.git/logs/refs/heads/main
+upload: .git\logs\refs\remotes\origin\main to s3://test202323232/.git/logs/refs/remotes/origin/main
+upload: .git\objects\37\f716d2441ce494f56d645ec7e598f7901cc1b6 to s3://test202323232/.git/objects/37/f716d2441ce494f56d645ec7e598f7901cc1b6
+upload: .git\refs\remotes\origin\main to s3://test202323232/.git/refs/remotes/origin/main
+upload: .git\objects\c6\f94312215a4fb2055c46265da8e649926b2f95 to s3://test202323232/.git/objects/c6/f94312215a4fb2055c46265da8e649926b2f95
+upload: .git\refs\heads\main to s3://test202323232/.git/refs/heads/main
+upload: .git\objects\2f\922224c572063ac7c683ff0180f2990922cede to s3://test202323232/.git/objects/2f/922224c572063ac7c683ff0180f2990922cede
+upload: .git\objects\f8\0b3caa0e686375353058511023a3cde4a04270 to s3://test202323232/.git/objects/f8/0b3caa0e686375353058511023a3cde4a04270
+upload: .git\objects\61\572e5b716b55dcb43dec8120f719c51c17b263 to s3://test202323232/.git/objects/61/572e5b716b55dcb43dec8120f719c51c17b263
+upload: .git\objects\f4\9d109571a195e229784239b14776de536de327 to s3://test202323232/.git/objects/f4/9d109571a195e229784239b14776de536de327
+upload: .git\index to s3://test202323232/.git/index
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T054748Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=9b1d764b1d499aff2224319ff13b66b121991fc1a78e6acac8aaf850ffaed65b
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git commit -m "fixing vpc references- vpc created successfully"
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ssh-security-group-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T054800Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=0056f416822ded71aeebcf03cfb741d31754cdb3b31d9a92d30e19de73e50c84
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T054803Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=2237b336a699ba0b15d40467d9723681bad10a3b4989f96e08502343344dcec0
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/vpc-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/vpc-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T054844Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=fb92dbbe5e754a235f899dbd7802eeff2d10d6eed5e0f3e1f06daaeccf176a6d  
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 sync . s3://test202323232
+upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
+upload: .\ssh-security-group-nested.yaml to s3://test202323232/ssh-security-group-nested.yaml
+upload: .\vpc-nested.yaml to s3://test202323232/vpc-nested.yaml  
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ssh-security-group-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T055205Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=7fb2fbc4b35d9905f3ac984437ba5bd7888ed4a6cb60c3c9d0a6ab42a1d177fe
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/vpc-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/vpc-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T055215Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=7e6d7712465094c5807ccb3c6de803c898ef60d18f13951ae05eff782a2b3b5e  
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git log --oneline
+61572e5 (HEAD -> main, origin/main) fixing vpc references- vpc created successfully
+ce12479 fixing Parameters: [EnvironmentName] must have values
+b3485f5 fixing vpc referencing
+72201bf Template format error: Unresolved resource dependencies [TemplateURL] in the Resources block of the template
+6f43cdf fix Template format error: Resource name vpc-nested is non alphanumeric.
+748de55 vpc nested stack trail 1
+1e02c45 vpc yml
+bfc7b5f terminal log add
+43f2b40 test 1
+c05da4e Ec2 + Security group nested v1
+25a1082 empty file
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git add .
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git commit -m "fixing vpc default value for EnvironmentName"
+[main f2657d3] fixing vpc default value for EnvironmentName
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git push
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 417 bytes | 417.00 KiB/s, done.
+Total 4 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
+   61572e5..f2657d3  main -> main
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git branch customizationSG
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git branch -b customizationSG
+error: unknown switch `b'
+usage: git branch [<options>] [-r | -a] [--merged] [--no-merged]
+   or: git branch [<options>] [-f] [--recurse-submodules] <branch-name> [<start-point>]
+   or: git branch [<options>] [-l] [<pattern>...]
+   or: git branch [<options>] [-r] (-d | -D) <branch-name>...
+   or: git branch [<options>] (-m | -M) [<old-branch>] <new-branch>
+   or: git branch [<options>] (-c | -C) [<old-branch>] <new-branch>
+   or: git branch [<options>] [-r | -a] [--points-at]
+   or: git branch [<options>] [-r | -a] [--format]
+
+Generic options
+    -v, --verbose         show hash and subject, give twice for upstream branch
+    -q, --quiet           suppress informational messages
+    -t, --track[=(direct|inherit)]
+                          set branch tracking configuration
+    -u, --set-upstream-to <upstream>
+                          change the upstream info
+    --unset-upstream      unset the upstream info
+    --color[=<when>]      use colored output
+    -r, --remotes         act on remote-tracking branches
+    --contains <commit>   print only branches that contain the commit
+    --no-contains <commit>
+                          print only branches that don't contain the commit
+    --abbrev[=<n>]        use <n> digits to display object names
+
+Specific git-branch actions:
+    -a, --all             list both remote-tracking and local branches
+    -d, --delete          delete fully merged branch
+    -D                    delete branch (even if not merged)
+    -m, --move            move/rename a branch and its reflog
+    -M                    move/rename a branch, even if target exists
+    --omit-empty          do not output a newline after empty formatted refs
+    -c, --copy            copy a branch and its reflog
+    -C                    copy a branch, even if target exists
+    -l, --list            list branch names
+    --show-current        show current branch name
+    --create-reflog       create the branch's reflog
+    --edit-description    edit the description for the branch
+    -f, --force           force creation, move/rename, deletion
+    --merged <commit>     print only branches that are merged
+    --no-merged <commit>  print only branches that are not merged
+    --column[=<style>]    list branches in columns
+    --sort <key>          field name to sort on
+    --points-at <object>  print only branches of the object
+    -i, --ignore-case     sorting and filtering are case insensitive
+    --recurse-submodules  recurse through submodules
+    --format <format>     format to use for the output
+
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git checkout -b customizationSG
+fatal: a branch named 'customizationSG' already exists
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git checkout customizationSG
+Switched to branch 'customizationSG'
+M       ec2-instance-root.yaml
+M       ssh-security-group-nested.yaml
+M       vpc-nested.yaml
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (customizationSG)
+$ git add .
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (customizationSG)
+$ git log --oneline
+f2657d3 (HEAD -> customizationSG, origin/main, main) fixing vpc default value for EnvironmentName
+61572e5 fixing vpc references- vpc created successfully
+ce12479 fixing Parameters: [EnvironmentName] must have values
+b3485f5 fixing vpc referencing
+72201bf Template format error: Unresolved resource dependencies [TemplateURL] in the Resources block of the template
+6f43cdf fix Template format error: Resource name vpc-nested is non alphanumeric.
+748de55 vpc nested stack trail 1
+1e02c45 vpc yml
+bfc7b5f terminal log add
+43f2b40 test 1
+c05da4e Ec2 + Security group nested v1
+25a1082 empty file
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (customizationSG)
+$ git status
+On branch customizationSG
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   ec2-instance-root.yaml
+        modified:   ssh-security-group-nested.yaml
+        modified:   vpc-nested.yaml
+
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (customizationSG)
+$ git commit
+[customizationSG dde7d5b] On branch customizationSG
+ 3 files changed, 17 insertions(+), 8 deletions(-)
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (customizationSG)
+$ git push
+fatal: The current branch customizationSG has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin customizationSG
+
+To have this happen automatically for branches without a tracking
+upstream, see 'push.autoSetupRemote' in 'git help config'.
+
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (customizationSG)
+$ git push --set-upstream origin customizationSG
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 713 bytes | 713.00 KiB/s, done.
+Total 5 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+remote: 
+remote: Create a pull request for 'customizationSG' on GitHub by visiting:
+remote:      https://github.com/PeterTawfik-ATU/Cloudformation-test-github/pull/new/customizationSG
+remote:
+To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
+ * [new branch]      customizationSG -> customizationSG
+branch 'customizationSG' set up to track 'origin/customizationSG'.
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (customizationSG)
