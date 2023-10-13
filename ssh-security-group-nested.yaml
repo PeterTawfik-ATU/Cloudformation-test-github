@@ -25,7 +25,7 @@ Resources:
           Description: SSH for HR department
         - CidrIp: "172.16.0.0/31"
           FromPort: 22
-          ToPort: 22VPC
+          ToPort: 22
           IpProtocol: tcp
           Description: SSH for Finance department
       VpcId: !Ref VPCId
