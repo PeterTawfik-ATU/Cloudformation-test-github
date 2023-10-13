@@ -22,7 +22,7 @@ Resources:
         VPCId: !GetAtt VPC.Outputs.VPCID
       TimeoutInMinutes: 5
 
-  vpcnested:
+  VPC:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Ref VPCIdURL
@@ -38,4 +38,4 @@ Resources:
       ImageId: !Ref ImageId
       SecurityGroupIds:
         - !GetAtt SSHSecurityGroupStack.Outputs.SSHGroupId
-      SubnetId: !Ref SubnetId
+      SubnetId: !GetAtt VPC.Outputs.PublicSubnet1
