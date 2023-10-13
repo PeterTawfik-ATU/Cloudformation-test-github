@@ -16,7 +16,7 @@ Resources:
   SSHSecurityGroupStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Ref TemplateURL
+      TemplateURL: !Ref SGTemplateURL
       Parameters:
         ApplicationName: !Ref AWS::StackName
         VPCId: !GetAtt VPC.Outputs.VPCID
@@ -25,7 +25,7 @@ Resources:
   vpcnested:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Ref TemplateURL
+      TemplateURL: !Ref VPCIdURL
       Parameters:
         ApplicationName: !Ref AWS::StackName
 
