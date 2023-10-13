@@ -1,10 +1,10 @@
 Parameters:
-  VPCId:
+  VPCIdURL:
     Description: VPC to create the security group and EC2 instance into
-    Type: AWS::EC2::VPC::Id
+    Type: String
 
-  TemplateURL:
-    Description: URL of the nested stack template
+  SGTemplateURL:
+    Description: Security Group URL nested stack template
     Type: String
 
   ImageId:
@@ -19,8 +19,16 @@ Resources:
       TemplateURL: !Ref TemplateURL
       Parameters:
         ApplicationName: !Ref AWS::StackName
-        VPCId: !Ref VPCId
+        VPCId: !GetAtt VPC.Outputs.VPCID
       TimeoutInMinutes: 5
+
+  vpc-nested:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Ref TemplateURL
+      Parameters:
+        ApplicationName: !Ref AWS::StackName
+
 
   EC2Instance:
     Type: AWS::EC2::Instance
@@ -30,4 +38,4 @@ Resources:
       ImageId: !Ref ImageId
       SecurityGroupIds:
         - !GetAtt SSHSecurityGroupStack.Outputs.SSHGroupId
-
+      SubnetId: !Ref SubnetId
