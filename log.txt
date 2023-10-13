@@ -1,0 +1,168 @@
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git log --oneline
+43f2b40 (HEAD -> main) test 1
+c05da4e Ec2 + Security group nested v1
+25a1082 (origin/main) empty file
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git diff-tree -no-commit-id --name-onlyh 43f2b40 -r
+usage: git diff-tree [--stdin] [-m] [-s] [-v] [--no-commit-id] [--pretty]
+              [-t] [-r] [-c | --cc] [--combined-all-paths] [--root] [--merge-base]
+              [<common-diff-options>] <tree-ish> [<tree-ish>] [<path>...]
+
+  -r            diff recursively
+  -c            show combined diff for merge commits
+  --cc          show combined diff for merge commits removing uninteresting hunks
+  --combined-all-paths
+                show name of file in all parents for combined diffs
+  --root        include the initial commit as diff against /dev/null
+
+common diff options:
+  -z            output diff-raw with lines terminated with NUL.
+  -p            output patch format.
+  -u            synonym for -p.
+  --patch-with-raw
+                output both a patch and the diff-raw format.
+  --stat        show diffstat instead of patch.
+  --numstat     show numeric diffstat instead of patch.
+  --patch-with-stat
+                output a patch and prepend its diffstat.
+  --name-only   show only names of changed files.
+  --name-status show names and status of changed files.
+  --full-index  show full object name on index lines.
+  --abbrev=<n>  abbreviate object names in diff-tree header and diff-raw.
+  -R            swap input file pairs.
+  -B            detect complete rewrites.
+  -M            detect renames.
+  -C            detect copies.
+  --find-copies-harder
+                try unchanged files as candidate for copy detection.
+  -l<n>         limit rename attempts up to <n> paths.
+  -O<file>      reorder diffs according to the <file>.
+  -S<string>    find filepair whose only one side contains the string.
+  --pickaxe-all
+                show all files diff when -S is used and hit is found.
+  -a  --text    treat all files as text.
+
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git show --name-only 43f2b40
+commit 43f2b400c705bbd48314137b94a80847430ba6f3 (HEAD -> main)
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 05:09:52 2023 +0100
+
+    test 1
+
+test1.yml
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git show --stat 43f2b40
+commit 43f2b400c705bbd48314137b94a80847430ba6f3 (HEAD -> main)
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 05:09:52 2023 +0100
+
+ions(-)
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git diff-tree --no-commit-id --name-only -r 43f2b40
+test1.yml
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git log --oneline
+43f2b40 (HEAD -> main) test 1
+c05da4e Ec2 + Security group nested v1
+25a1082 (origin/main) empty file
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws --configure
+
+usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
+To see help text, you can run:
+
+  aws help
+  aws <command> help
+  aws <command> <subcommand> help
+
+aws: error: the following arguments are required: command
+
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ 
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws --help
+
+usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
+To see help text, you can run:
+
+  aws help
+  aws <command> help
+  aws <command> <subcommand> help
+
+aws: error: the following arguments are required: command
+
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws configure
+AWS Access Key ID [****************D7D3]: AKIAZD2TUNF5R4UYIC2J
+AWS Secret Access Key [****************pMeH]: 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
+Default region name [ap-south-1]: us-east-1
+Default output format [table]: 
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 sync . s3://test202323232
+upload: .git\description to s3://test202323232/.git/description    
+upload: .git\hooks\pre-merge-commit.sample to s3://test202323232/.git/hooks/pre-merge-commit.sample
+upload: .git\hooks\pre-push.sample to s3://test202323232/.git/hooks/pre-push.sample
+upload: .git\hooks\pre-rebase.sample to s3://test202323232/.git/hooks/pre-rebase.sample
+upload: .git\hooks\fsmonitor-watchman.sample to s3://test202323232/.git/hooks/fsmonitor-watchman.sample
+upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
+upload: .git\hooks\applypatch-msg.sample to s3://test202323232/.git/hooks/applypatch-msg.sample
+upload: .git\HEAD to s3://test202323232/.git/HEAD
+upload: .git\hooks\commit-msg.sample to s3://test202323232/.git/hooks/commit-msg.sample
+upload: .git\hooks\post-update.sample to s3://test202323232/.git/hooks/post-update.sample
+upload: .git\config to s3://test202323232/.git/config
+upload: .git\hooks\pre-commit.sample to s3://test202323232/.git/hooks/pre-commit.sample
+upload: .git\hooks\pre-receive.sample to s3://test202323232/.git/hooks/pre-receive.sample
+upload: .git\hooks\pre-applypatch.sample to s3://test202323232/.git/hooks/pre-applypatch.sample
+upload: .git\hooks\prepare-commit-msg.sample to s3://test202323232/.git/hooks/prepare-commit-msg.sample
+upload: .git\hooks\push-to-checkout.sample to s3://test202323232/.git/hooks/push-to-checkout.sample
+upload: .git\hooks\update.sample to s3://test202323232/.git/hooks/update.sample
+upload: .git\hooks\sendemail-validate.sample to s3://test202323232/.git/hooks/sendemail-validate.sample
+upload: .git\index to s3://test202323232/.git/index
+upload: .git\info\exclude to s3://test202323232/.git/info/exclude
+upload: .git\logs\HEAD to s3://test202323232/.git/logs/HEAD       
+upload: .git\logs\refs\heads\main to s3://test202323232/.git/logs/refs/heads/main
+upload: .git\logs\refs\remotes\origin\main to s3://test202323232/.git/logs/refs/remotes/origin/main
+upload: .git\objects\14\49b3afbf672e13cc3ec1132ebc2346f9926eea to s3://test202323232/.git/objects/14/49b3afbf672e13cc3ec1132ebc2346f9926eea
+upload: .git\objects\25\a1082f8cba2d704709ae99798bdfb977a4b4f0 to s3://test202323232/.git/objects/25/a1082f8cba2d704709ae99798bdfb977a4b4f0
+upload: .git\objects\3b\6db224660afb36545996b52c0b1ff2eab040e1 to s3://test202323232/.git/objects/3b/6db224660afb36545996b52c0b1ff2eab040e1
+upload: .git\objects\43\f2b400c705bbd48314137b94a80847430ba6f3 to s3://test202323232/.git/objects/43/f2b400c705bbd48314137b94a80847430ba6f3
+upload: .git\objects\4b\825dc642cb6eb9a060e54bf8d69288fbee4904 to s3://test202323232/.git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904
+upload: .git\objects\91\e6c47289f8f70fe921b1d540c7d9b648292a14 to s3://test202323232/.git/objects/91/e6c47289f8f70fe921b1d540c7d9b648292a14
+upload: .git\objects\a6\206ea7be50ff2c6ae0ded7dae14eda5831cda0 to s3://test202323232/.git/objects/a6/206ea7be50ff2c6ae0ded7dae14eda5831cda0
+upload: .git\objects\e6\9de29bb2d1d6434b8b29ae775ad8c2e48c5391 to s3://test202323232/.git/objects/e6/9de29bb2d1d6434b8b29ae775ad8c2e48c5391
+upload: .git\objects\c0\5da4e236d449a3a79c3c3ca4faef70d61bd640 to s3://test202323232/.git/objects/c0/5da4e236d449a3a79c3c3ca4faef70d61bd640
+upload: .git\refs\heads\main to s3://test202323232/.git/refs/heads/main
+upload: .git\objects\eb\ad73c78eb9a509af44a1375f1356a5ebed2f22 to s3://test202323232/.git/objects/eb/ad73c78eb9a509af44a1375f1356a5ebed2f22
+upload: .git\refs\remotes\origin\main to s3://test202323232/.git/refs/remotes/origin/main
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 ls s3://test202323232
+                           PRE .git/
+2023-10-13 03:48:57        846 ec2-instance-root.yaml
+2023-10-13 03:48:57        944 ssh-security-group-nested.yaml
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T042810Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=cbe7eb37bdf54d41fce279b589111d2d1b5a949ba9d5330d9dfcf34b81a59d91
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 presign s3://test202323232/ssh-security-group-nested.yaml
+https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T042839Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=05edf15e1f09cc67435230b2caf805b5a3d58337d5d0a4f915a790cde32eea54
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$
