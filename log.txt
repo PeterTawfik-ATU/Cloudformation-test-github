@@ -166,3 +166,77 @@ https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?
 
 Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
 $
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git add .
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git commit -m "vpc yml"
+ create mode 100644 log.txt
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git add .
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git commit -m "vpc yml"
+[main 1e02c45] vpc yml
+ 1 file changed, 237 insertions(+)
+ create mode 100644 vpc.yaml
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git push
+Enumerating objects: 14, done.
+Counting objects: 100% (14/14), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (13/13), done.
+Writing objects: 100% (13/13), 5.25 KiB | 5.25 MiB/s, done.
+Total 13 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), done.
+To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
+   25a1082..1e02c45  main -> main
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ aws s3 sync . s3://test202323232
+upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
+upload: .\log.txt to s3://test202323232/log.txt
+upload: .\ssh-security-group-nested.yaml to s3://test202323232/ssh-security-group-nested.yaml
+upload: .\vpc.yaml to s3://test202323232/vpc.yaml
+upload: .git\objects\12\bce6e2d68ee3f2fc0269ba1e23da8ea1ee4500 to s3://test202323232/.git/objects/12/bce6e2d68ee3f2fc0269ba1e23da8ea1ee4500
+upload: .git\objects\a7\2fbf3a0efc1bb8a1b4fbc558226e0210974dec to s3://test202323232/.git/objects/a7/2fbf3a0efc1bb8a1b4fbc558226e0210974dec
+upload: .git\refs\heads\main to s3://test202323232/.git/refs/heads/main
+upload: .git\refs\remotes\origin\main to s3://test202323232/.git/refs/remotes/origin/main
+upload: .git\objects\bf\c7b5fcae0b7d384eb398c40e77f91706fba9a3 to s3://test202323232/.git/objects/bf/c7b5fcae0b7d384eb398c40e77f91706fba9a3
+upload: .git\objects\be\d800d5b1b59f08d0621d6995ef8a663e839daf to s3://test202323232/.git/objects/be/d800d5b1b59f08d0621d6995ef8a663e839daf
+upload: .git\objects\1e\02c4579c6b8c0db9665666c60df887d5e38c6a to s3://test202323232/.git/objects/1e/02c4579c6b8c0db9665666c60df887d5e38c6a
+upload: .git\objects\f6\891f3cc7517f0e29fc5ffc1e62d28a2dea5919 to s3://test202323232/.git/objects/f6/891f3cc7517f0e29fc5ffc1e62d28a2dea5919
+upload: .git\objects\ed\c2fcdcf51a2b006bc3629a1e4f69f194718c1d to s3://test202323232/.git/objects/ed/c2fcdcf51a2b006bc3629a1e4f69f194718c1d
+upload: .git\index to s3://test202323232/.git/index
+upload: .git\logs\refs\heads\main to s3://test202323232/.git/logs/refs/heads/main
+upload: .git\logs\HEAD to s3://test202323232/.git/logs/HEAD
+upload: .git\logs\refs\remotes\origin\main to s3://test202323232/.git/logs/refs/remotes/origin/main
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git add .
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git commit -m "vpc nested stack trail 1"
+[main 748de55] vpc nested stack trail 1
+ 2 files changed, 14 insertions(+), 6 deletions(-)
+ rename vpc.yaml => vpc-nested.yaml (100%)
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git push
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 469 bytes | 469.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
+   1e02c45..748de55  main -> main
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+$ git push
+Everything up-to-date
+
+Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)

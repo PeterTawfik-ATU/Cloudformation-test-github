@@ -22,7 +22,7 @@ Resources:
         VPCId: !GetAtt VPC.Outputs.VPCID
       TimeoutInMinutes: 5
 
-  vpc-nested:
+  vpcnested:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: !Ref TemplateURL

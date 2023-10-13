@@ -1,0 +1,7 @@
+S3 error: Domain name specified in <bucket_name> is not a valid S3 domain
+https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/presign.html
+
+
+When using Resource name in cloudformation vpc-nested
+Template format error: Resource name vpc-nested is non alphanumeric.
+
