@@ -1,9 +1,11 @@
-Description:  This template deploys a VPC, with a pair of public and private subnets spread
+Description:  This template deploys a VPC, with a pair of public and four private subnets spread
   across two Availability Zones. It deploys an internet gateway, with a default
   route on the public subnets. It deploys a pair of NAT gateways (one in each AZ),
-  and default routes for them in the private subnets. Source for this which I found 
+  and default routes for them in the private subnets.
+  The following link contains the starting point which I modified based on the project requirement.
   https://docs.aws.amazon.com/codebuild/latest/userguide/cloudformation-vpc-template.html
-  Peter
+
+  Peter Tawfik L00186456
 
 Parameters:
   EnvironmentName:
@@ -35,6 +37,16 @@ Parameters:
     Description: Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone
     Type: String
     Default: 10.192.21.0/24
+
+  PrivateSubnet3CIDR:
+    Description: Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone
+    Type: String
+    Default: 10.192.22.0/24
+
+  PrivateSubnet4CIDR:
+    Description: Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone
+    Type: String
+    Default: 10.192.23.0/24
 
 Resources:
   VPC:
@@ -91,18 +103,40 @@ Resources:
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName} Private Subnet (AZ1)
+          Value: !Sub ${EnvironmentName} Private Subnet 1 (AZ1)
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [ 1, !GetAZs  '' ]
+      AvailabilityZone: !Select [ 0, !GetAZs  '' ]
       CidrBlock: !Ref PrivateSubnet2CIDR
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName} Private Subnet (AZ2)
+          Value: !Sub ${EnvironmentName} Private Subnet 2 (AZ1)
+
+  PrivateSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 1, !GetAZs  '' ]
+      CidrBlock: !Ref PrivateSubnet3CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName} Private Subnet 3 (AZ2)
+
+  PrivateSubnet4:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 1, !GetAZs  '' ]
+      CidrBlock: !Ref PrivateSubnet4CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName} Private Subnet 4 (AZ2)
 
   NatGateway1EIP:
     Type: AWS::EC2::EIP
@@ -217,7 +251,7 @@ Outputs:
 
   PrivateSubnets:
     Description: A list of the private subnets
-    Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
+    Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2, !Ref PrivateSubnet3, !Ref PrivateSubnet4 ]]
 
   PublicSubnet1:
     Description: A reference to the public subnet in the 1st Availability Zone
@@ -228,12 +262,20 @@ Outputs:
     Value: !Ref PublicSubnet2
 
   PrivateSubnet1:
-    Description: A reference to the private subnet in the 1st Availability Zone
+    Description: A reference to the private *DB* subnet in the 1st Availability Zone
     Value: !Ref PrivateSubnet1
 
   PrivateSubnet2:
-    Description: A reference to the private subnet in the 2nd Availability Zone
+    Description: A reference to the private *APP* subnet in the 1nd Availability Zone
     Value: !Ref PrivateSubnet2
+
+  PrivateSubnet3:
+    Description: A reference to the private *DB* subnet in the 2st Availability Zone
+    Value: !Ref PrivateSubnet3
+
+  PrivateSubnet4:
+    Description: A reference to the private *APP* subnet in the 2nd Availability Zone
+    Value: !Ref PrivateSubnet4
 
   NoIngressSecurityGroup:
     Description: Security group with no ingress rule
