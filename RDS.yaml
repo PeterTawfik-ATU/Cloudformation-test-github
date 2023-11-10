@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Create a DB subnet group and MYSQL Database"
+
+Parameters:
+  VPC:
+    Type: String
+    Description: The VPC to create the cluster
+    Default: vpc-ID
+
+  PrivateSubnet01:
+    Type: String
+    Description: The subnet for the DB cluster
+    Default: subnet-ID
+
+  PrivateSubnet03:
+    Type: String
+    Description: The subnet for the DB cluster
+    Default: subnet-ID
+
+  MasterUsername:
+    Type: String
+    Description: The username for our database.
+    Default: master
+
+  MasterUserPassword:
+    Type: String
+    Description: The password for the database.
+    "NoEcho": true
+
+  ParameterGroup:
+    Type: String
+    Description: The name of the database parameter group created.
+
+Resources:
+    EC2SecurityGroup:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: "Database instances security group"
+            VpcId: !Ref VPC
+            SecurityGroupIngress: 
+              - 
+                CidrIp: "*.*.*.*/32"
+                FromPort: 3306
+                IpProtocol: "tcp"
+                ToPort: 3306
+            SecurityGroupEgress: 
+              - 
+                CidrIp: "0.0.0.0/0"
+                IpProtocol: "-1"
+
+    RDSDBSubnetGroup:
+        Type: "AWS::RDS::DBSubnetGroup"
+        Properties:
+            DBSubnetGroupDescription: "Subnet Group for mySQL database"
+            DBSubnetGroupName: !Sub "${AWS::Region}-aws-dxl-database-subnet-group"
+            SubnetIds: 
+              - !Ref PrivateSubnet01
+              - !Ref PrivateSubnet03
+            Tags: 
+              - Key: Name
+                Value: TestDB
+              - Key: createdBy
+                Value: Peter Tawfik
+
+    RDSDBInstance:
+        Type: AWS::RDS::DBInstance
+        Properties:
+            DBInstanceIdentifier: MySQL-testDB
+            AllocatedStorage: 20
+            DBInstanceClass: db.t3.small
+            Engine: "MYSQL"
+            MasterUsername: !Ref MasterUsername
+            MasterUserPassword: !Ref MasterUserPassword
+            BackupRetentionPeriod: 0
+            MultiAZ: true
+            EngineVersion: 8.0.20
+            AutoMinorVersionUpgrade: true
+            PubliclyAccessible: false
+            StorageType: gp2
+            Port: 3306
+            StorageEncrypted: true
+            CopyTagsToSnapshot: true
+            EnableIAMDatabaseAuthentication: false
+            DeletionProtection: false
+            DBSubnetGroupName: !Ref RDSDBSubnetGroup
+            VPCSecurityGroups: 
+              - !Ref EC2SecurityGroup
+            MaxAllocatedStorage: 50
+            DBParameterGroupName: !Ref ParameterGroup
+            Tags: 
+              - Key: Name
+                Value: Peter-MySQL
+              - Key: createdBy
+                Value: L00186456
+
+Outputs:
+   Cluster:
+    Description: The DB Cluster Name
+    Value: !Ref RDSDBInstance
+    
+   SubnetGroup:
+    Description: The db subnet group name 
+    Value: !Ref RDSDBSubnetGroup
