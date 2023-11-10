@@ -1,7 +1,9 @@
 Description:  This template deploys a VPC, with a pair of public and private subnets spread
   across two Availability Zones. It deploys an internet gateway, with a default
   route on the public subnets. It deploys a pair of NAT gateways (one in each AZ),
-  and default routes for them in the private subnets.
+  and default routes for them in the private subnets. Source for this which I found 
+  https://docs.aws.amazon.com/codebuild/latest/userguide/cloudformation-vpc-template.html
+  Peter
 
 Parameters:
   EnvironmentName:
@@ -236,3 +238,8 @@ Outputs:
   NoIngressSecurityGroup:
     Description: Security group with no ingress rule
     Value: !Ref NoIngressSecurityGroup
+
+
+  PublicSubnet1CIDR:
+    Description: PublicSubnet1CIDR IP addresses
+    value: PublicSubnet1CID

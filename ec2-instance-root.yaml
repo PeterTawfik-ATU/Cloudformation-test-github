@@ -37,5 +37,5 @@ Resources:
       # Note we use the pseudo parameter AWS::Region
       ImageId: !Ref ImageId
       SecurityGroupIds:
-        - !GetAtt SSHSecurityGroupStack.Outputs.SSHGroupId
+        - !GetAtt Ec2SSHSecurityGroupStack.Outputs.SSHGroupId
       SubnetId: !GetAtt VPC.Outputs.PublicSubnet1

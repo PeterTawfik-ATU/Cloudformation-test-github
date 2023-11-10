@@ -8,7 +8,7 @@ Parameters:
     Type: String
   
 Resources:
-  SSHSecurityGroup:
+  Ec2SSHSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: !Sub Security group for ${ApplicationName}
@@ -18,19 +18,26 @@ Resources:
           ToPort: 22
           IpProtocol: tcp
           Description: SSH for Engineering department
-        - CidrIp: "192.168.0.0/25"
+        - CidrIp: "109.255.230.190/32"
           FromPort: 22
           ToPort: 22
           IpProtocol: tcp
-          Description: SSH for HR department
-        - CidrIp: "172.16.0.0/31"
+          Description: SSH for my public IP
+      VpcId: !Ref VPCId
+
+  DBSSHSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub Security group for ${ApplicationName}
+      SecurityGroupIngress:
+        - CidrIp: "10.0.0.0/25"
           FromPort: 22
           ToPort: 22
           IpProtocol: tcp
-          Description: SSH for Finance department
+          Description: SSH for Engineering department
       VpcId: !Ref VPCId
 
 Outputs:
   SSHGroupId:
-    Value: !Ref SSHSecurityGroup
+    Value: !Ref Ec2SSHSecurityGroup
     Description: Id for the SSH Security Group
