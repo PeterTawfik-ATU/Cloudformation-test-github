@@ -280,8 +280,3 @@ Outputs:
   NoIngressSecurityGroup:
     Description: Security group with no ingress rule
     Value: !Ref NoIngressSecurityGroup
-
-
-  PublicSubnet1CIDR:
-    Description: PublicSubnet1CIDR IP addresses
-    value: PublicSubnet1CID
