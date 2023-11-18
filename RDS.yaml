@@ -5,17 +5,17 @@ Parameters:
   VPC:
     Type: String
     Description: The VPC to create the cluster
-    Default: vpc-ID
+    Default: vpc-0400da1f72ba361ca
 
   PrivateSubnet01:
     Type: String
     Description: The subnet for the DB cluster
-    Default: subnet-ID
+    Default: subnet-029b147ab24f1a12e
 
   PrivateSubnet03:
     Type: String
     Description: The subnet for the DB cluster
-    Default: subnet-ID
+    Default: subnet-0580837657e0a32f8
 
   MasterUsername:
     Type: String
@@ -27,9 +27,9 @@ Parameters:
     Description: The password for the database.
     "NoEcho": true
 
-  ParameterGroup:
-    Type: String
-    Description: The name of the database parameter group created.
+  #ParameterGroup:
+  #  Type: String
+  #  Description: The name of the database parameter group created.
 
 Resources:
     EC2SecurityGroup:
@@ -39,10 +39,16 @@ Resources:
             VpcId: !Ref VPC
             SecurityGroupIngress: 
               - 
-                CidrIp: "*.*.*.*/32"
+                CidrIp: "10.192.21.0/24"
                 FromPort: 3306
                 IpProtocol: "tcp"
                 ToPort: 3306
+              -
+                CidrIp: "10.192.21.0/24"
+                FromPort: 3306
+                IpProtocol: "tcp"
+                ToPort: 3306
+                
             SecurityGroupEgress: 
               - 
                 CidrIp: "0.0.0.0/0"
@@ -86,7 +92,6 @@ Resources:
             VPCSecurityGroups: 
               - !Ref EC2SecurityGroup
             MaxAllocatedStorage: 50
-            DBParameterGroupName: !Ref ParameterGroup
             Tags: 
               - Key: Name
                 Value: Peter-MySQL
