@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  VPCStack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: 'https://s3.amazonaws.com/cf-network-l00186456/vpc.yaml'
+  SecurityGroupStack:
+    Type: 'AWS::CloudFormation::Stack'
+    DependsOn: VPCStack
+    Properties:
+      TemplateURL: 'https://s3.amazonaws.com/cf-network-l00186456/SG.yaml'
+      Parameters:
+        VpcId: 'vpc-00186456'
+         # Fn::GetAtt:
+          #  - VPCStack
+           # - Outputs.VPC  # Reference the output from VPCStack
+  AppServerStack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: 'https://s3.amazonaws.com/cf-network-l00186456/app-server.yaml'
+      Parameters:
+        SecurityGroupId: 
+          Fn::GetAtt: [SecurityGroupStack, Outputs.SecurityGroupId]
+        ImageId:
+          Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+          Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+  WebServerStack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: 'https://s3.amazonaws.com/cf-network-l00186456/web-server.yaml'
+      Parameters:
+        SecurityGroupId: 
+          Fn::GetAtt: [SecurityGroupStack, Outputs.SecurityGroupId]
+        ImageId:
+          Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+          Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+  RDSStack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: 'https://s3.amazonaws.com/cf-network-l00186456/RDS.yaml'
+      Parameters:
+        SecurityGroupId: 
+          Fn::GetAtt: [SecurityGroupStack, Outputs.SecurityGroupId]

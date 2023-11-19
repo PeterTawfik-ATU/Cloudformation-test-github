@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  SecurityGroupId: 
+    Type: String
+    Default: 'sg-06fcc56ef1713827f'
+  VPCId:
+    Type: String
+    Default: 'vpc-0c9c365a7f0661f05'
+Resources:
+  WebServerStack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: 'https://s3.amazonaws.com/cf-network-l00186456/web-server.yaml'
+      Parameters:
+        SecurityGroupId: !Ref SecurityGroupId

@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  ImageId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+Resources:
+  MyWebServer:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: !Ref ImageId
+      InstanceType: t2.micro
+      KeyName: mykey
+      SecurityGroupId: !Ref SecurityGroupId
+      SubnetId: !GetAtt VPC.Outputs.PublicSubnet1
+      Tags:
+        - Key: Name
+          Value: MyWebServer-L00186456

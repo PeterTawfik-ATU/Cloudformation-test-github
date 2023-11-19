@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Main Template"
+
+Parameters:
+  VpcStackName:
+    Type: String
+    Default: "MyVPCStack"
+
+  SecurityGroupStackName:
+    Type: String
+    Default: "MySecurityGroupStack"
+
+  RDSStackName:
+    Type: String
+    Default: "MyRDSStack"
+
+Resources:
+  VPCStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: "https://cf-network-l00186456.s3.us-west-1.amazonaws.com/vpc-nested.yaml"
+      Parameters:
+        Param1: "ParameterValue1"
+        # Add more parameters if needed
+
+  SecurityGroupStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: "https://cf-network-l00186456.s3.us-west-1.amazonaws.com/security-group-template.yaml"
+      Parameters:
+        Param1: "ParameterValue1"
+        # Add more parameters if needed
+
+  EC2-web:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: "https://cf-network-l00186456.s3.us-west-1.amazonaws.com/security-group-template.yaml"
+      Parameters:
+        Param1: "ParameterValue1"
+        # Add more parameters if needed
+
+  EC2-app:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: "https://cf-network-l00186456.s3.us-west-1.amazonaws.com/security-group-template.yaml"
+      Parameters:
+        Param1: "ParameterValue1"
+        # Add more parameters if needed
+  
+  RDSStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: "https://cf-network-l00186456.s3.us-west-1.amazonaws.com/rds-template.yaml"
+      Parameters:
+        Param1: "ParameterValue1"
+        # Add more parameters if needed

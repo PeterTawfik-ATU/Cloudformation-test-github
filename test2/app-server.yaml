@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: '2010-09-09'
+MyAppServer:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: !Ref ImageId
+      InstanceType: t2.micro
+      KeyName: mykey
+      SecurityGroupIds:
+        - Ref: MySecurityGroup
+      Tags:
+        - Key: Name
+          Value: MyAppServer-L00186456

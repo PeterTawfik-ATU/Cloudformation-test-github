@@ -1,0 +1,1471 @@
+commit 43ab6d21002dbc81411ef8d3bfa6c68c043e16d0
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Nov 10 11:41:43 2023 +0200
+
+    Creating VPC 4 Private & 2 public subnets.
+
+diff --git a/vpc-nested.yaml b/vpc-nested.yaml
+index 282ffba..1917f6c 100644
+--- a/vpc-nested.yaml
++++ b/vpc-nested.yaml
+@@ -1,9 +1,11 @@
+-Description:  This template deploys a VPC, with a pair of public and private subnets spread
++Description:  This template deploys a VPC, with a pair of public and four private subnets spread
+   across two Availability Zones. It deploys an internet gateway, with a default
+   route on the public subnets. It deploys a pair of NAT gateways (one in each AZ),
+-  and default routes for them in the private subnets. Source for this which I found 
++  and default routes for them in the private subnets.
++  The following link contains the starting point which I modified based on the project requirement.
+   https://docs.aws.amazon.com/codebuild/latest/userguide/cloudformation-vpc-template.html
+-  Peter
++
++  Peter Tawfik L00186456
+ 
+ Parameters:
+   EnvironmentName:
+@@ -36,6 +38,16 @@ Parameters:
+     Type: String
+     Default: 10.192.21.0/24
+ 
++  PrivateSubnet3CIDR:
++    Description: Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone
++    Type: String
++    Default: 10.192.22.0/24
++
++  PrivateSubnet4CIDR:
++    Description: Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone
++    Type: String
++    Default: 10.192.23.0/24
++
+ Resources:
+   VPC:
+     Type: AWS::EC2::VPC
+@@ -91,18 +103,40 @@ Resources:
+       MapPublicIpOnLaunch: false
+       Tags:
+         - Key: Name
+-          Value: !Sub ${EnvironmentName} Private Subnet (AZ1)
++          Value: !Sub ${EnvironmentName} Private Subnet 1 (AZ1)
+ 
+   PrivateSubnet2:
+     Type: AWS::EC2::Subnet
+     Properties:
+       VpcId: !Ref VPC
+-      AvailabilityZone: !Select [ 1, !GetAZs  '' ]
++      AvailabilityZone: !Select [ 0, !GetAZs  '' ]
+       CidrBlock: !Ref PrivateSubnet2CIDR
+       MapPublicIpOnLaunch: false
+       Tags:
+         - Key: Name
+-          Value: !Sub ${EnvironmentName} Private Subnet (AZ2)
++          Value: !Sub ${EnvironmentName} Private Subnet 2 (AZ1)
++
++  PrivateSubnet3:
++    Type: AWS::EC2::Subnet
++    Properties:
++      VpcId: !Ref VPC
++      AvailabilityZone: !Select [ 1, !GetAZs  '' ]
++      CidrBlock: !Ref PrivateSubnet3CIDR
++      MapPublicIpOnLaunch: false
++      Tags:
++        - Key: Name
++          Value: !Sub ${EnvironmentName} Private Subnet 3 (AZ2)
++
++  PrivateSubnet4:
++    Type: AWS::EC2::Subnet
++    Properties:
++      VpcId: !Ref VPC
++      AvailabilityZone: !Select [ 1, !GetAZs  '' ]
++      CidrBlock: !Ref PrivateSubnet4CIDR
++      MapPublicIpOnLaunch: false
++      Tags:
++        - Key: Name
++          Value: !Sub ${EnvironmentName} Private Subnet 4 (AZ2)
+ 
+   NatGateway1EIP:
+     Type: AWS::EC2::EIP
+@@ -217,7 +251,7 @@ Outputs:
+ 
+   PrivateSubnets:
+     Description: A list of the private subnets
+-    Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
++    Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2, !Ref PrivateSubnet3, !Ref PrivateSubnet4 ]]
+ 
+   PublicSubnet1:
+     Description: A reference to the public subnet in the 1st Availability Zone
+@@ -228,13 +262,21 @@ Outputs:
+     Value: !Ref PublicSubnet2
+ 
+   PrivateSubnet1:
+-    Description: A reference to the private subnet in the 1st Availability Zone
++    Description: A reference to the private *DB* subnet in the 1st Availability Zone
+     Value: !Ref PrivateSubnet1
+ 
+   PrivateSubnet2:
+-    Description: A reference to the private subnet in the 2nd Availability Zone
++    Description: A reference to the private *APP* subnet in the 1nd Availability Zone
+     Value: !Ref PrivateSubnet2
+ 
++  PrivateSubnet3:
++    Description: A reference to the private *DB* subnet in the 2st Availability Zone
++    Value: !Ref PrivateSubnet3
++
++  PrivateSubnet4:
++    Description: A reference to the private *APP* subnet in the 2nd Availability Zone
++    Value: !Ref PrivateSubnet4
++
+   NoIngressSecurityGroup:
+     Description: Security group with no ingress rule
+     Value: !Ref NoIngressSecurityGroup
+
+commit 49637f8567f7c4fd0b0ad4e9af6ba3fb516c3598
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Nov 10 11:21:40 2023 +0200
+
+    10-11
+
+diff --git a/vpc-nested.yaml b/vpc-nested.yaml
+index 08bbaec..282ffba 100644
+--- a/vpc-nested.yaml
++++ b/vpc-nested.yaml
+@@ -238,3 +238,8 @@ Outputs:
+   NoIngressSecurityGroup:
+     Description: Security group with no ingress rule
+     Value: !Ref NoIngressSecurityGroup
++
++
++  PublicSubnet1CIDR:
++    Description: PublicSubnet1CIDR IP addresses
++    value: PublicSubnet1CID
+\ No newline at end of file
+
+commit 16d5c54884a4a4db9cec583a99bdbb85a6b92820
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 08:00:16 2023 +0100
+
+    rollback to working
+
+diff --git a/vpc-nested.yaml b/vpc-nested.yaml
+index 8db5b6e..08bbaec 100644
+--- a/vpc-nested.yaml
++++ b/vpc-nested.yaml
+@@ -237,4 +237,4 @@ Outputs:
+ 
+   NoIngressSecurityGroup:
+     Description: Security group with no ingress rule
+-    Value: !Ref NoIngressSecurityGroup
+\ No newline at end of file
++    Value: !Ref NoIngressSecurityGroup
+
+commit dde7d5bc39df116429f332ffd0c0c17fb9d2dcae
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 07:45:32 2023 +0100
+
+    On branch customizationSG
+
+diff --git a/ec2-instance-root.yaml b/ec2-instance-root.yaml
+index f80b3ca..0546f59 100644
+--- a/ec2-instance-root.yaml
++++ b/ec2-instance-root.yaml
+@@ -37,5 +37,5 @@ Resources:
+       # Note we use the pseudo parameter AWS::Region
+       ImageId: !Ref ImageId
+       SecurityGroupIds:
+-        - !GetAtt SSHSecurityGroupStack.Outputs.SSHGroupId
++        - !GetAtt Ec2SSHSecurityGroupStack.Outputs.SSHGroupId
+       SubnetId: !GetAtt VPC.Outputs.PublicSubnet1
+diff --git a/ssh-security-group-nested.yaml b/ssh-security-group-nested.yaml
+index 999334b..71f30b6 100644
+--- a/ssh-security-group-nested.yaml
++++ b/ssh-security-group-nested.yaml
+@@ -8,7 +8,7 @@ Parameters:
+     Type: String
+   
+ Resources:
+-  SSHSecurityGroup:
++  Ec2SSHSecurityGroup:
+     Type: AWS::EC2::SecurityGroup
+     Properties:
+       GroupDescription: !Sub Security group for ${ApplicationName}
+@@ -18,19 +18,26 @@ Resources:
+           ToPort: 22
+           IpProtocol: tcp
+           Description: SSH for Engineering department
+-        - CidrIp: "192.168.0.0/25"
++        - CidrIp: "109.255.230.190/32"
+           FromPort: 22
+           ToPort: 22
+           IpProtocol: tcp
+-          Description: SSH for HR department
+-        - CidrIp: "172.16.0.0/31"
++          Description: SSH for my public IP
++      VpcId: !Ref VPCId
++
++  DBSSHSecurityGroup:
++    Type: AWS::EC2::SecurityGroup
++    Properties:
++      GroupDescription: !Sub Security group for ${ApplicationName}
++      SecurityGroupIngress:
++        - CidrIp: "10.0.0.0/25"
+           FromPort: 22
+           ToPort: 22
+           IpProtocol: tcp
+-          Description: SSH for Finance department
++          Description: SSH for Engineering department
+       VpcId: !Ref VPCId
+ 
+ Outputs:
+   SSHGroupId:
+-    Value: !Ref SSHSecurityGroup
++    Value: !Ref Ec2SSHSecurityGroup
+     Description: Id for the SSH Security Group
+\ No newline at end of file
+diff --git a/vpc-nested.yaml b/vpc-nested.yaml
+index 0903bd5..8db5b6e 100644
+--- a/vpc-nested.yaml
++++ b/vpc-nested.yaml
+@@ -1,7 +1,9 @@
+ Description:  This template deploys a VPC, with a pair of public and private subnets spread
+   across two Availability Zones. It deploys an internet gateway, with a default
+   route on the public subnets. It deploys a pair of NAT gateways (one in each AZ),
+-  and default routes for them in the private subnets.
++  and default routes for them in the private subnets. Source for this which I found 
++  https://docs.aws.amazon.com/codebuild/latest/userguide/cloudformation-vpc-template.html
++  Peter
+ 
+ Parameters:
+   EnvironmentName:
+
+commit f2657d3c5b34786620786ab7e2d113514dc3ed23
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 06:53:52 2023 +0100
+
+    fixing vpc default value for EnvironmentName
+
+diff --git a/ssh-security-group-nested.yaml b/ssh-security-group-nested.yaml
+index f49d109..999334b 100644
+--- a/ssh-security-group-nested.yaml
++++ b/ssh-security-group-nested.yaml
+@@ -25,7 +25,7 @@ Resources:
+           Description: SSH for HR department
+         - CidrIp: "172.16.0.0/31"
+           FromPort: 22
+-          ToPort: 22VPC
++          ToPort: 22
+           IpProtocol: tcp
+           Description: SSH for Finance department
+       VpcId: !Ref VPCId
+diff --git a/vpc-nested.yaml b/vpc-nested.yaml
+index 37f716d..0903bd5 100644
+--- a/vpc-nested.yaml
++++ b/vpc-nested.yaml
+@@ -7,7 +7,7 @@ Parameters:
+   EnvironmentName:
+     Description: An environment name that is prefixed to resource names
+     Type: String
+-    Default: PeterVPC
++    Default: VPC-Peter
+ 
+   VpcCIDR:
+     Description: Please enter the IP range (CIDR notation) for this VPC
+@@ -211,7 +211,7 @@ Outputs:
+ 
+   PublicSubnets:
+     Description: A list of the public subnets
+-    Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]VPC
++    Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
+ 
+   PrivateSubnets:
+     Description: A list of the private subnets
+
+commit 61572e5b716b55dcb43dec8120f719c51c17b263
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 06:47:26 2023 +0100
+
+    fixing vpc references- vpc created successfully
+
+diff --git a/ec2-instance-root.yaml b/ec2-instance-root.yaml
+index 1fd4a76..f80b3ca 100644
+--- a/ec2-instance-root.yaml
++++ b/ec2-instance-root.yaml
+@@ -19,7 +19,7 @@ Resources:
+       TemplateURL: !Ref SGTemplateURL
+       Parameters:
+         ApplicationName: !Ref AWS::StackName
+-        VPCId: !GetAtt VPC.Outputs.VPCID
++        VPCId: !GetAtt VPC.Outputs.VPC
+       TimeoutInMinutes: 5
+ 
+   VPC:
+@@ -27,7 +27,7 @@ Resources:
+     Properties:
+       TemplateURL: !Ref VPCIdURL
+       Parameters:
+-        ApplicationName: !Ref AWS::StackName
++        EnvironmentName: !Ref AWS::StackName
+ 
+ 
+   EC2Instance:
+diff --git a/log.txt b/log.txt
+index 023d8a8..2f92222 100644
+--- a/log.txt
++++ b/log.txt
+@@ -1,3 +1,7 @@
++The most similar commands are
++        bisect
++        rev-list
++
+ Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+ $ git log --oneline
+ 43f2b40 (HEAD -> main) test 1
+@@ -164,8 +168,93 @@ Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+ $ aws s3 presign s3://test202323232/ssh-security-group-nested.yaml
+ https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T042839Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=05edf15e1f09cc67435230b2caf805b5a3d58337d5d0a4f915a790cde32eea54
+ 
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git log --oneline
++43f2b40 (HEAD -> main) test 1
++c05da4e Ec2 + Security group nested v1
++25a1082 (origin/main) empty file
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git diff-tree -no-commit-id --name-onlyh 43f2b40 -r
++usage: git diff-tree [--stdin] [-m] [-s] [-v] [--no-commit-id] [--pretty]
++              [-t] [-r] [-c | --cc] [--combined-all-paths] [--root] [--merge-base]
++              [<common-diff-options>] <tree-ish> [<tree-ish>] [<path>...]
++
++  -r            diff recursively
++  -c            show combined diff for merge commits
++  --cc          show combined diff for merge commits removing uninteresting hunks
++  --combined-all-paths
++                show name of file in all parents for combined diffs
++  --root        include the initial commit as diff against /dev/null
++
++common diff options:
++  -z            output diff-raw with lines terminated with NUL.
++  -p            output patch format.
++  -u            synonym for -p.
++  --patch-with-raw
++                output both a patch and the diff-raw format.
++  --stat        show diffstat instead of patch.
++  --numstat     show numeric diffstat instead of patch.
++  --patch-with-stat
++                output a patch and prepend its diffstat.
++  --name-only   show only names of changed files.
++  --name-status show names and status of changed files.
++  --full-index  show full object name on index lines.
++  --abbrev=<n>  abbreviate object names in diff-tree header and diff-raw.
++  -R            swap input file pairs.
++  -B            detect complete rewrites.
++  -M            detect renames.
++  -C            detect copies.
++  --find-copies-harder
++                try unchanged files as candidate for copy detection.
++  -l<n>         limit rename attempts up to <n> paths.
++  -O<file>      reorder diffs according to the <file>.
++  -S<string>    find filepair whose only one side contains the string.
++  --pickaxe-all
++                show all files diff when -S is used and hit is found.
++  -a  --text    treat all files as text.
++
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git show --name-only 43f2b40
++commit 43f2b400c705bbd48314137b94a80847430ba6f3 (HEAD -> main)
++Author: Peter <p.magdytab@gmail.com>
++Date:   Fri Oct 13 05:09:52 2023 +0100
++
++    test 1
++
++$^Cer@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)15a790cde32eea54mz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T042839Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=ho
++
+ Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+ $
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
++
++ create mode 100644 log.txt
++
+ Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+ $ git add .
+ 
+@@ -239,4 +328,218 @@ Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+ $ git push
+ Everything up-to-date
+ 
+-Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+\ No newline at end of file
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 ls s3://test202323232
++                           PRE .git/
++2023-10-13 03:48:57        846 ec2-instance-root.yaml
++2023-10-13 05:45:08       9017 log.txt
++2023-10-13 05:45:08        933 ssh-security-group-nested.yaml
++2023-10-13 05:45:08       6832 vpc.yaml
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
++https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T050944Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=703700f9c423bafa7f1b9a3f11d3426d4fd222010a7ff5c567813b704a02f62c
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 sync . s3://test202323232
++upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
++upload: .\vpc-nested.yaml to s3://test202323232/vpc-nested.yaml   
++upload: .git\logs\HEAD to s3://test202323232/.git/logs/HEAD     
++upload: .git\refs\heads\main to s3://test202323232/.git/refs/heads/main
++upload: .git\logs\refs\heads\main to s3://test202323232/.git/logs/refs/heads/main
++upload: .git\objects\74\8de550d4cd35530d94782de2e2e1042a7bc4f2 to s3://test202323232/.git/objects/74/8de550d4cd35530d94782de2e2e1042a7bc4f2
++upload: .git\objects\0d\7bfe215c0fe8a190fbe01140ebbf6935ac433e to s3://test202323232/.git/objects/0d/7bfe215c0fe8a190fbe01140ebbf6935ac433e
++upload: .git\objects\f6\891f3cc7517f0e29fc5ffc1e62d28a2dea5919 to s3://test202323232/.git/objects/f6/891f3cc7517f0e29fc5ffc1e62d28a2dea5919
++upload: .\ec2-instance-root.yaml to s3://test202323232/ec2-instance-root.yaml
++upload: .git\index to s3://test202323232/.git/index
++upload: .git\refs\remotes\origin\main to s3://test202323232/.git/refs/remotes/origin/main
++upload: .git\objects\e3\4cbea681b0107443e2bbeacc6d831d58ad0a9e to s3://test202323232/.git/objects/e3/4cbea681b0107443e2bbeacc6d831d58ad0a9e
++upload: .\log.txt to s3://test202323232/log.txt
++upload: .git\logs\refs\remotes\origin\main to s3://test202323232/.git/logs/refs/remotes/origin/main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
++https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T051115Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=148e2ab74ff958cedc514c6199a33db158b2ab1e1c66c9581d10a5c303300fe8
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ commit add .
++bash: commit: command not found
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git add .
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git commit -m "fix Template format error: Resource name vpc-nested is non alphanumeric."
++[main 6f43cdf] fix Template format error: Resource name vpc-nested is non alphanumeric.
++ 3 files changed, 83 insertions(+), 2 deletions(-)
++ create mode 100644 Mistakes.txt
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git push
++Enumerating objects: 8, done.
++Counting objects: 100% (8/8), done.
++Delta compression using up to 12 threads
++Compressing objects: 100% (5/5), done.
++Writing objects: 100% (5/5), 1.60 KiB | 1.60 MiB/s, done.
++Total 5 (delta 2), reused 0 (delta 0), pack-reused 0
++remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
++To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
++   748de55..6f43cdf  main -> main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 sync . s3://test202323232
++upload: .git\logs\refs\heads\main to s3://test202323232/.git/logs/refs/heads/main
++upload: .git\refs\heads\main to s3://test202323232/.git/refs/heads/main
++upload: .git\refs\remotes\origin\main to s3://test202323232/.git/refs/remotes/origin/main
++upload: .\Mistakes.txt to s3://test202323232/Mistakes.txt      
++upload: .git\objects\6f\43cdf1aa49e84e6fb28d57a30ea3d71c0e00c0 to s3://test202323232/.git/objects/6f/43cdf1aa49e84e6fb28d57a30ea3d71c0e00c0
++upload: .git\objects\02\3d8a8006a156818f6b2256cf4247d464ab0f24 to s3://test202323232/.git/objects/02/3d8a8006a156818f6b2256cf4247d464ab0f24
++upload: .git\objects\b3\bf5c9d0c84eaf7d3578e6a7d1475c3072be1f5 to s3://test202323232/.git/objects/b3/bf5c9d0c84eaf7d3578e6a7d1475c3072be1f5
++upload: .git\objects\03\304358703bf5f44fd2a9fd794d2424b9a90810 to s3://test202323232/.git/objects/03/304358703bf5f44fd2a9fd794d2424b9a90810
++upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
++upload: .git\index to s3://test202323232/.git/index
++upload: .git\objects\7d\05e7df8ea486d80569cd03ce5268932257d8f8 to s3://test202323232/.git/objects/7d/05e7df8ea486d80569cd03ce5268932257d8f8
++upload: .git\logs\refs\remotes\origin\main to s3://test202323232/.git/logs/refs/remotes/origin/main
++upload: .git\logs\HEAD to s3://test202323232/.git/logs/HEAD
++upload: .\ec2-instance-root.yaml to s3://test202323232/ec2-instance-root.yaml
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
++https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T051416Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=c6e373dfb7da59265490dac1b4497e3b7e6c1e634d4dc3a9c7103f249b7d44bd
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 sync . s3://test202323232
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
++https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T051505Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=01abfd4bdc78819d7204384adb7f18eeff0040659a8dfc2d1bf6cd4da6e85d2f
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git add .
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git commit -m "Template format error: Unresolved resource dependencies [TemplateURL] in the Resources block of the template"
++[main 72201bf] Template format error: Unresolved resource dependencies [TemplateURL] in the Resources block of the template
++ 1 file changed, 2 insertions(+), 2 deletions(-)
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git push
++Enumerating objects: 5, done.
++Counting objects: 100% (5/5), done.
++Delta compression using up to 12 threads
++Compressing objects: 100% (3/3), done.
++Writing objects: 100% (3/3), 372 bytes | 372.00 KiB/s, done.
++Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
++remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
++To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
++   6f43cdf..72201bf  main -> main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 sync . s3://test202323232
++upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
++upload: .git\logs\refs\remotes\origin\main to s3://test202323232/.git/logs/refs/remotes/origin/main
++upload: .git\objects\a9\50e16a37c0b5c0c3e8beda7aaf1713c2b42f30 to s3://test202323232/.git/objects/a9/50e16a37c0b5c0c3e8beda7aaf1713c2b42f30
++upload: .git\logs\HEAD to s3://test202323232/.git/logs/HEAD     
++upload: .\ec2-instance-root.yaml to s3://test202323232/ec2-instance-root.yaml
++upload: .git\objects\b1\28e72e6dd260e189f31ecd8617f111c29c234f to s3://test202323232/.git/objects/b1/28e72e6dd260e189f31ecd8617f111c29c234f
++upload: .git\refs\heads\main to s3://test202323232/.git/refs/heads/main
++upload: .git\logs\refs\heads\main to s3://test202323232/.git/logs/refs/heads/main
++upload: .git\objects\72\201bf7c678acd54cd49757262c47b4386d7377 to s3://test202323232/.git/objects/72/201bf7c678acd54cd49757262c47b4386d7377
++upload: .git\index to s3://test202323232/.git/index
++upload: .git\refs\remotes\origin\main to s3://test202323232/.git/refs/remotes/origin/main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
++https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T051712Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=90b5bc80d010aa9ef06ad98d773d254f31cb17550fb631a97fc8390530f333d3
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git add .
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git commit -m "fixing vpc referencing"
++[main b3485f5] fixing vpc referencing
++ 1 file changed, 2 insertions(+), 2 deletions(-)
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git pusg
++git: 'pusg' is not a git command. See 'git --help'.
++
++The most similar command is
++        push
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git push
++Enumerating objects: 5, done.
++Counting objects: 100% (5/5), done.
++Delta compression using up to 12 threads
++Compressing objects: 100% (3/3), done.
++Writing objects: 100% (3/3), 331 bytes | 331.00 KiB/s, done.
++Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
++remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
++To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
++   72201bf..b3485f5  main -> main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 sync . s3://test202323232
++upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
++upload: .git\logs\refs\remotes\origin\main to s3://test202323232/.git/logs/refs/remotes/origin/main
++upload: .git\refs\remotes\origin\main to s3://test202323232/.git/refs/remotes/origin/main
++upload: .git\objects\b3\485f5e9d49facf0dbd07b68b2e73786e4363bb to s3://test202323232/.git/objects/b3/485f5e9d49facf0dbd07b68b2e73786e4363bb
++upload: .\ec2-instance-root.yaml to s3://test202323232/ec2-instance-root.yaml
++upload: .git\objects\1f\d4a76a5cdf187e002f67b00fbb0b388c294207 to s3://test202323232/.git/objects/1f/d4a76a5cdf187e002f67b00fbb0b388c294207
++upload: .git\index to s3://test202323232/.git/index
++upload: .git\logs\HEAD to s3://test202323232/.git/logs/HEAD
++upload: .git\refs\heads\main to s3://test202323232/.git/refs/heads/main
++upload: .git\objects\c8\9f0029d11035162b32be50c587d79c044e0821 to s3://test202323232/.git/objects/c8/9f0029d11035162b32be50c587d79c044e0821
++upload: .git\logs\refs\heads\main to s3://test202323232/.git/logs/refs/heads/main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
++https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T052706Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=9389314635f7f376e363a119adce68ea4dc08191f70b4389722a0cf8de3f9651
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 ls s3://test202323232
++                           PRE .git/
++2023-10-13 06:14:12        290 Mistakes.txt
++2023-10-13 06:27:03       1072 ec2-instance-root.yaml
++2023-10-13 06:11:13      12862 log.txt
++2023-10-13 05:45:08        933 ssh-security-group-nested.yaml
++2023-10-13 06:11:12       6832 vpc-nested.yaml
++2023-10-13 05:45:08       6832 vpc.yaml
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 presign s3://test202323232/ssh-security-group-nested.yaml
++https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T052803Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=01e0065f9403cc3e0ef5b34274d1fc964f0897ef0b11a3a0b34fd825576634b7
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 presign s3://test202323232/vpc-nested.yaml
++https://test202323232.s3.us-east-1.amazonaws.com/vpc-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T052834Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=c5a1e6e084168850424b88d5cba8b62f3d93513103017c67c10f7cebc2fbe77b  
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git add .
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git add .
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git commit -m "fixing Parameters: [EnvironmentName] must have values"
++[main ce12479] fixing Parameters: [EnvironmentName] must have values
++ 1 file changed, 1 insertion(+)
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git push
++Enumerating objects: 5, done.
++Counting objects: 100% (5/5), done.
++Delta compression using up to 12 threads
++Compressing objects: 100% (3/3), done.
++Writing objects: 100% (3/3), 345 bytes | 345.00 KiB/s, done.
++Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
++remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
++To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
++   b3485f5..ce12479  main -> main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++
+diff --git a/ssh-security-group-nested.yaml b/ssh-security-group-nested.yaml
+index bed800d..f49d109 100644
+--- a/ssh-security-group-nested.yaml
++++ b/ssh-security-group-nested.yaml
+@@ -2,6 +2,7 @@ Parameters:
+   ApplicationName:
+     Description: The application name
+     Type: String
++    Default: PeterTawfikSG
+   VPCId:
+     Description: VPC to create the security group into
+     Type: String
+@@ -24,7 +25,7 @@ Resources:
+           Description: SSH for HR department
+         - CidrIp: "172.16.0.0/31"
+           FromPort: 22
+-          ToPort: 22
++          ToPort: 22VPC
+           IpProtocol: tcp
+           Description: SSH for Finance department
+       VpcId: !Ref VPCId
+diff --git a/vpc-nested.yaml b/vpc-nested.yaml
+index 4f76b29..37f716d 100644
+--- a/vpc-nested.yaml
++++ b/vpc-nested.yaml
+@@ -211,7 +211,7 @@ Outputs:
+ 
+   PublicSubnets:
+     Description: A list of the public subnets
+-    Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
++    Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]VPC
+ 
+   PrivateSubnets:
+     Description: A list of the private subnets
+
+commit ce124794b7b16a644f4d4fd8ec8f7dfd1cc83203
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 06:30:39 2023 +0100
+
+    fixing Parameters: [EnvironmentName] must have values
+
+diff --git a/vpc-nested.yaml b/vpc-nested.yaml
+index f6891f3..4f76b29 100644
+--- a/vpc-nested.yaml
++++ b/vpc-nested.yaml
+@@ -7,6 +7,7 @@ Parameters:
+   EnvironmentName:
+     Description: An environment name that is prefixed to resource names
+     Type: String
++    Default: PeterVPC
+ 
+   VpcCIDR:
+     Description: Please enter the IP range (CIDR notation) for this VPC
+
+commit b3485f5e9d49facf0dbd07b68b2e73786e4363bb
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 06:26:41 2023 +0100
+
+    fixing vpc referencing
+
+diff --git a/ec2-instance-root.yaml b/ec2-instance-root.yaml
+index a950e16..1fd4a76 100644
+--- a/ec2-instance-root.yaml
++++ b/ec2-instance-root.yaml
+@@ -22,7 +22,7 @@ Resources:
+         VPCId: !GetAtt VPC.Outputs.VPCID
+       TimeoutInMinutes: 5
+ 
+-  vpcnested:
++  VPC:
+     Type: AWS::CloudFormation::Stack
+     Properties:
+       TemplateURL: !Ref VPCIdURL
+@@ -38,4 +38,4 @@ Resources:
+       ImageId: !Ref ImageId
+       SecurityGroupIds:
+         - !GetAtt SSHSecurityGroupStack.Outputs.SSHGroupId
+-      SubnetId: !Ref SubnetId
++      SubnetId: !GetAtt VPC.Outputs.PublicSubnet1
+
+commit 72201bf7c678acd54cd49757262c47b4386d7377
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 06:16:57 2023 +0100
+
+    Template format error: Unresolved resource dependencies [TemplateURL] in the Resources block of the template
+
+diff --git a/ec2-instance-root.yaml b/ec2-instance-root.yaml
+index 0330435..a950e16 100644
+--- a/ec2-instance-root.yaml
++++ b/ec2-instance-root.yaml
+@@ -16,7 +16,7 @@ Resources:
+   SSHSecurityGroupStack:
+     Type: AWS::CloudFormation::Stack
+     Properties:
+-      TemplateURL: !Ref TemplateURL
++      TemplateURL: !Ref SGTemplateURL
+       Parameters:
+         ApplicationName: !Ref AWS::StackName
+         VPCId: !GetAtt VPC.Outputs.VPCID
+@@ -25,7 +25,7 @@ Resources:
+   vpcnested:
+     Type: AWS::CloudFormation::Stack
+     Properties:
+-      TemplateURL: !Ref TemplateURL
++      TemplateURL: !Ref VPCIdURL
+       Parameters:
+         ApplicationName: !Ref AWS::StackName
+ 
+
+commit 6f43cdf1aa49e84e6fb28d57a30ea3d71c0e00c0
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 06:13:56 2023 +0100
+
+    fix Template format error: Resource name vpc-nested is non alphanumeric.
+
+diff --git a/Mistakes.txt b/Mistakes.txt
+new file mode 100644
+index 0000000..b3bf5c9
+--- /dev/null
++++ b/Mistakes.txt
+@@ -0,0 +1,7 @@
++S3 error: Domain name specified in <bucket_name> is not a valid S3 domain
++https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/presign.html
++
++
++When using Resource name in cloudformation vpc-nested
++Template format error: Resource name vpc-nested is non alphanumeric.
++
+diff --git a/ec2-instance-root.yaml b/ec2-instance-root.yaml
+index 0d7bfe2..0330435 100644
+--- a/ec2-instance-root.yaml
++++ b/ec2-instance-root.yaml
+@@ -22,7 +22,7 @@ Resources:
+         VPCId: !GetAtt VPC.Outputs.VPCID
+       TimeoutInMinutes: 5
+ 
+-  vpc-nested:
++  vpcnested:
+     Type: AWS::CloudFormation::Stack
+     Properties:
+       TemplateURL: !Ref TemplateURL
+diff --git a/log.txt b/log.txt
+index 12bce6e..023d8a8 100644
+--- a/log.txt
++++ b/log.txt
+@@ -165,4 +165,78 @@ $ aws s3 presign s3://test202323232/ssh-security-group-nested.yaml
+ https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T042839Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=05edf15e1f09cc67435230b2caf805b5a3d58337d5d0a4f915a790cde32eea54
+ 
+ Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+-$
+\ No newline at end of file
++$
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git add .
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git commit -m "vpc yml"
++ create mode 100644 log.txt
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git add .
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git commit -m "vpc yml"
++[main 1e02c45] vpc yml
++ 1 file changed, 237 insertions(+)
++ create mode 100644 vpc.yaml
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git push
++Enumerating objects: 14, done.
++Counting objects: 100% (14/14), done.
++Delta compression using up to 12 threads
++Compressing objects: 100% (13/13), done.
++Writing objects: 100% (13/13), 5.25 KiB | 5.25 MiB/s, done.
++Total 13 (delta 3), reused 0 (delta 0), pack-reused 0
++remote: Resolving deltas: 100% (3/3), done.
++To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
++   25a1082..1e02c45  main -> main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 sync . s3://test202323232
++upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
++upload: .\log.txt to s3://test202323232/log.txt
++upload: .\ssh-security-group-nested.yaml to s3://test202323232/ssh-security-group-nested.yaml
++upload: .\vpc.yaml to s3://test202323232/vpc.yaml
++upload: .git\objects\12\bce6e2d68ee3f2fc0269ba1e23da8ea1ee4500 to s3://test202323232/.git/objects/12/bce6e2d68ee3f2fc0269ba1e23da8ea1ee4500
++upload: .git\objects\a7\2fbf3a0efc1bb8a1b4fbc558226e0210974dec to s3://test202323232/.git/objects/a7/2fbf3a0efc1bb8a1b4fbc558226e0210974dec
++upload: .git\refs\heads\main to s3://test202323232/.git/refs/heads/main
++upload: .git\refs\remotes\origin\main to s3://test202323232/.git/refs/remotes/origin/main
++upload: .git\objects\bf\c7b5fcae0b7d384eb398c40e77f91706fba9a3 to s3://test202323232/.git/objects/bf/c7b5fcae0b7d384eb398c40e77f91706fba9a3
++upload: .git\objects\be\d800d5b1b59f08d0621d6995ef8a663e839daf to s3://test202323232/.git/objects/be/d800d5b1b59f08d0621d6995ef8a663e839daf
++upload: .git\objects\1e\02c4579c6b8c0db9665666c60df887d5e38c6a to s3://test202323232/.git/objects/1e/02c4579c6b8c0db9665666c60df887d5e38c6a
++upload: .git\objects\f6\891f3cc7517f0e29fc5ffc1e62d28a2dea5919 to s3://test202323232/.git/objects/f6/891f3cc7517f0e29fc5ffc1e62d28a2dea5919
++upload: .git\objects\ed\c2fcdcf51a2b006bc3629a1e4f69f194718c1d to s3://test202323232/.git/objects/ed/c2fcdcf51a2b006bc3629a1e4f69f194718c1d
++upload: .git\index to s3://test202323232/.git/index
++upload: .git\logs\refs\heads\main to s3://test202323232/.git/logs/refs/heads/main
++upload: .git\logs\HEAD to s3://test202323232/.git/logs/HEAD
++upload: .git\logs\refs\remotes\origin\main to s3://test202323232/.git/logs/refs/remotes/origin/main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git add .
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git commit -m "vpc nested stack trail 1"
++[main 748de55] vpc nested stack trail 1
++ 2 files changed, 14 insertions(+), 6 deletions(-)
++ rename vpc.yaml => vpc-nested.yaml (100%)
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git push
++Enumerating objects: 5, done.
++Counting objects: 100% (5/5), done.
++Delta compression using up to 12 threads
++Compressing objects: 100% (3/3), done.
++Writing objects: 100% (3/3), 469 bytes | 469.00 KiB/s, done.
++Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
++remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
++To https://github.com/PeterTawfik-ATU/Cloudformation-test-github.git
++   1e02c45..748de55  main -> main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git push
++Everything up-to-date
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
+\ No newline at end of file
+
+commit 748de550d4cd35530d94782de2e2e1042a7bc4f2
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 06:06:48 2023 +0100
+
+    vpc nested stack trail 1
+
+diff --git a/ec2-instance-root.yaml b/ec2-instance-root.yaml
+index a6206ea..0d7bfe2 100644
+--- a/ec2-instance-root.yaml
++++ b/ec2-instance-root.yaml
+@@ -1,10 +1,10 @@
+ Parameters:
+-  VPCId:
++  VPCIdURL:
+     Description: VPC to create the security group and EC2 instance into
+-    Type: AWS::EC2::VPC::Id
++    Type: String
+ 
+-  TemplateURL:
+-    Description: URL of the nested stack template
++  SGTemplateURL:
++    Description: Security Group URL nested stack template
+     Type: String
+ 
+   ImageId:
+@@ -19,9 +19,17 @@ Resources:
+       TemplateURL: !Ref TemplateURL
+       Parameters:
+         ApplicationName: !Ref AWS::StackName
+-        VPCId: !Ref VPCId
++        VPCId: !GetAtt VPC.Outputs.VPCID
+       TimeoutInMinutes: 5
+ 
++  vpc-nested:
++    Type: AWS::CloudFormation::Stack
++    Properties:
++      TemplateURL: !Ref TemplateURL
++      Parameters:
++        ApplicationName: !Ref AWS::StackName
++
++
+   EC2Instance:
+     Type: AWS::EC2::Instance
+     Properties:
+@@ -30,4 +38,4 @@ Resources:
+       ImageId: !Ref ImageId
+       SecurityGroupIds:
+         - !GetAtt SSHSecurityGroupStack.Outputs.SSHGroupId
+-
++      SubnetId: !Ref SubnetId
+diff --git a/vpc.yaml b/vpc-nested.yaml
+similarity index 100%
+rename from vpc.yaml
+rename to vpc-nested.yaml
+
+commit 1e02c4579c6b8c0db9665666c60df887d5e38c6a
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 05:44:40 2023 +0100
+
+    vpc yml
+
+diff --git a/vpc.yaml b/vpc.yaml
+new file mode 100644
+index 0000000..f6891f3
+--- /dev/null
++++ b/vpc.yaml
+@@ -0,0 +1,237 @@
++Description:  This template deploys a VPC, with a pair of public and private subnets spread
++  across two Availability Zones. It deploys an internet gateway, with a default
++  route on the public subnets. It deploys a pair of NAT gateways (one in each AZ),
++  and default routes for them in the private subnets.
++
++Parameters:
++  EnvironmentName:
++    Description: An environment name that is prefixed to resource names
++    Type: String
++
++  VpcCIDR:
++    Description: Please enter the IP range (CIDR notation) for this VPC
++    Type: String
++    Default: 10.192.0.0/16
++
++  PublicSubnet1CIDR:
++    Description: Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone
++    Type: String
++    Default: 10.192.10.0/24
++
++  PublicSubnet2CIDR:
++    Description: Please enter the IP range (CIDR notation) for the public subnet in the second Availability Zone
++    Type: String
++    Default: 10.192.11.0/24
++
++  PrivateSubnet1CIDR:
++    Description: Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone
++    Type: String
++    Default: 10.192.20.0/24
++
++  PrivateSubnet2CIDR:
++    Description: Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone
++    Type: String
++    Default: 10.192.21.0/24
++
++Resources:
++  VPC:
++    Type: AWS::EC2::VPC
++    Properties:
++      CidrBlock: !Ref VpcCIDR
++      EnableDnsSupport: true
++      EnableDnsHostnames: true
++      Tags:
++        - Key: Name
++          Value: !Ref EnvironmentName
++
++  InternetGateway:
++    Type: AWS::EC2::InternetGateway
++    Properties:
++      Tags:
++        - Key: Name
++          Value: !Ref EnvironmentName
++
++  InternetGatewayAttachment:
++    Type: AWS::EC2::VPCGatewayAttachment
++    Properties:
++      InternetGatewayId: !Ref InternetGateway
++      VpcId: !Ref VPC
++
++  PublicSubnet1:
++    Type: AWS::EC2::Subnet
++    Properties:
++      VpcId: !Ref VPC
++      AvailabilityZone: !Select [ 0, !GetAZs '' ]
++      CidrBlock: !Ref PublicSubnet1CIDR
++      MapPublicIpOnLaunch: true
++      Tags:
++        - Key: Name
++          Value: !Sub ${EnvironmentName} Public Subnet (AZ1)
++
++  PublicSubnet2:
++    Type: AWS::EC2::Subnet
++    Properties:
++      VpcId: !Ref VPC
++      AvailabilityZone: !Select [ 1, !GetAZs  '' ]
++      CidrBlock: !Ref PublicSubnet2CIDR
++      MapPublicIpOnLaunch: true
++      Tags:
++        - Key: Name
++          Value: !Sub ${EnvironmentName} Public Subnet (AZ2)
++
++  PrivateSubnet1:
++    Type: AWS::EC2::Subnet
++    Properties:
++      VpcId: !Ref VPC
++      AvailabilityZone: !Select [ 0, !GetAZs  '' ]
++      CidrBlock: !Ref PrivateSubnet1CIDR
++      MapPublicIpOnLaunch: false
++      Tags:
++        - Key: Name
++          Value: !Sub ${EnvironmentName} Private Subnet (AZ1)
++
++  PrivateSubnet2:
++    Type: AWS::EC2::Subnet
++    Properties:
++      VpcId: !Ref VPC
++      AvailabilityZone: !Select [ 1, !GetAZs  '' ]
++      CidrBlock: !Ref PrivateSubnet2CIDR
++      MapPublicIpOnLaunch: false
++      Tags:
++        - Key: Name
++          Value: !Sub ${EnvironmentName} Private Subnet (AZ2)
++
++  NatGateway1EIP:
++    Type: AWS::EC2::EIP
++    DependsOn: InternetGatewayAttachment
++    Properties:
++      Domain: vpc
++
++  NatGateway2EIP:
++    Type: AWS::EC2::EIP
++    DependsOn: InternetGatewayAttachment
++    Properties:
++      Domain: vpc
++
++  NatGateway1:
++    Type: AWS::EC2::NatGateway
++    Properties:
++      AllocationId: !GetAtt NatGateway1EIP.AllocationId
++      SubnetId: !Ref PublicSubnet1
++
++  NatGateway2:
++    Type: AWS::EC2::NatGateway
++    Properties:
++      AllocationId: !GetAtt NatGateway2EIP.AllocationId
++      SubnetId: !Ref PublicSubnet2
++
++  PublicRouteTable:
++    Type: AWS::EC2::RouteTable
++    Properties:
++      VpcId: !Ref VPC
++      Tags:
++        - Key: Name
++          Value: !Sub ${EnvironmentName} Public Routes
++
++  DefaultPublicRoute:
++    Type: AWS::EC2::Route
++    DependsOn: InternetGatewayAttachment
++    Properties:
++      RouteTableId: !Ref PublicRouteTable
++      DestinationCidrBlock: 0.0.0.0/0
++      GatewayId: !Ref InternetGateway
++
++  PublicSubnet1RouteTableAssociation:
++    Type: AWS::EC2::SubnetRouteTableAssociation
++    Properties:
++      RouteTableId: !Ref PublicRouteTable
++      SubnetId: !Ref PublicSubnet1
++
++  PublicSubnet2RouteTableAssociation:
++    Type: AWS::EC2::SubnetRouteTableAssociation
++    Properties:
++      RouteTableId: !Ref PublicRouteTable
++      SubnetId: !Ref PublicSubnet2
++
++
++  PrivateRouteTable1:
++    Type: AWS::EC2::RouteTable
++    Properties:
++      VpcId: !Ref VPC
++      Tags:
++        - Key: Name
++          Value: !Sub ${EnvironmentName} Private Routes (AZ1)
++
++  DefaultPrivateRoute1:
++    Type: AWS::EC2::Route
++    Properties:
++      RouteTableId: !Ref PrivateRouteTable1
++      DestinationCidrBlock: 0.0.0.0/0
++      NatGatewayId: !Ref NatGateway1
++
++  PrivateSubnet1RouteTableAssociation:
++    Type: AWS::EC2::SubnetRouteTableAssociation
++    Properties:
++      RouteTableId: !Ref PrivateRouteTable1
++      SubnetId: !Ref PrivateSubnet1
++
++  PrivateRouteTable2:
++    Type: AWS::EC2::RouteTable
++    Properties:
++      VpcId: !Ref VPC
++      Tags:
++        - Key: Name
++          Value: !Sub ${EnvironmentName} Private Routes (AZ2)
++
++  DefaultPrivateRoute2:
++    Type: AWS::EC2::Route
++    Properties:
++      RouteTableId: !Ref PrivateRouteTable2
++      DestinationCidrBlock: 0.0.0.0/0
++      NatGatewayId: !Ref NatGateway2
++
++  PrivateSubnet2RouteTableAssociation:
++    Type: AWS::EC2::SubnetRouteTableAssociation
++    Properties:
++      RouteTableId: !Ref PrivateRouteTable2
++      SubnetId: !Ref PrivateSubnet2
++
++  NoIngressSecurityGroup:
++    Type: AWS::EC2::SecurityGroup
++    Properties:
++      GroupName: "no-ingress-sg"
++      GroupDescription: "Security group with no ingress rule"
++      VpcId: !Ref VPC
++
++Outputs:
++  VPC:
++    Description: A reference to the created VPC
++    Value: !Ref VPC
++
++  PublicSubnets:
++    Description: A list of the public subnets
++    Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
++
++  PrivateSubnets:
++    Description: A list of the private subnets
++    Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
++
++  PublicSubnet1:
++    Description: A reference to the public subnet in the 1st Availability Zone
++    Value: !Ref PublicSubnet1
++
++  PublicSubnet2:
++    Description: A reference to the public subnet in the 2nd Availability Zone
++    Value: !Ref PublicSubnet2
++
++  PrivateSubnet1:
++    Description: A reference to the private subnet in the 1st Availability Zone
++    Value: !Ref PrivateSubnet1
++
++  PrivateSubnet2:
++    Description: A reference to the private subnet in the 2nd Availability Zone
++    Value: !Ref PrivateSubnet2
++
++  NoIngressSecurityGroup:
++    Description: Security group with no ingress rule
++    Value: !Ref NoIngressSecurityGroup
+\ No newline at end of file
+
+commit bfc7b5fcae0b7d384eb398c40e77f91706fba9a3
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 05:43:32 2023 +0100
+
+    terminal log add
+
+diff --git a/log.txt b/log.txt
+new file mode 100644
+index 0000000..12bce6e
+--- /dev/null
++++ b/log.txt
+@@ -0,0 +1,168 @@
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git log --oneline
++43f2b40 (HEAD -> main) test 1
++c05da4e Ec2 + Security group nested v1
++25a1082 (origin/main) empty file
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git diff-tree -no-commit-id --name-onlyh 43f2b40 -r
++usage: git diff-tree [--stdin] [-m] [-s] [-v] [--no-commit-id] [--pretty]
++              [-t] [-r] [-c | --cc] [--combined-all-paths] [--root] [--merge-base]
++              [<common-diff-options>] <tree-ish> [<tree-ish>] [<path>...]
++
++  -r            diff recursively
++  -c            show combined diff for merge commits
++  --cc          show combined diff for merge commits removing uninteresting hunks
++  --combined-all-paths
++                show name of file in all parents for combined diffs
++  --root        include the initial commit as diff against /dev/null
++
++common diff options:
++  -z            output diff-raw with lines terminated with NUL.
++  -p            output patch format.
++  -u            synonym for -p.
++  --patch-with-raw
++                output both a patch and the diff-raw format.
++  --stat        show diffstat instead of patch.
++  --numstat     show numeric diffstat instead of patch.
++  --patch-with-stat
++                output a patch and prepend its diffstat.
++  --name-only   show only names of changed files.
++  --name-status show names and status of changed files.
++  --full-index  show full object name on index lines.
++  --abbrev=<n>  abbreviate object names in diff-tree header and diff-raw.
++  -R            swap input file pairs.
++  -B            detect complete rewrites.
++  -M            detect renames.
++  -C            detect copies.
++  --find-copies-harder
++                try unchanged files as candidate for copy detection.
++  -l<n>         limit rename attempts up to <n> paths.
++  -O<file>      reorder diffs according to the <file>.
++  -S<string>    find filepair whose only one side contains the string.
++  --pickaxe-all
++                show all files diff when -S is used and hit is found.
++  -a  --text    treat all files as text.
++
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git show --name-only 43f2b40
++commit 43f2b400c705bbd48314137b94a80847430ba6f3 (HEAD -> main)
++Author: Peter <p.magdytab@gmail.com>
++Date:   Fri Oct 13 05:09:52 2023 +0100
++
++    test 1
++
++test1.yml
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git show --stat 43f2b40
++commit 43f2b400c705bbd48314137b94a80847430ba6f3 (HEAD -> main)
++Author: Peter <p.magdytab@gmail.com>
++Date:   Fri Oct 13 05:09:52 2023 +0100
++
++ions(-)
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git diff-tree --no-commit-id --name-only -r 43f2b40
++test1.yml
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ git log --oneline
++43f2b40 (HEAD -> main) test 1
++c05da4e Ec2 + Security group nested v1
++25a1082 (origin/main) empty file
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws --configure
++
++usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
++To see help text, you can run:
++
++  aws help
++  aws <command> help
++  aws <command> <subcommand> help
++
++aws: error: the following arguments are required: command
++
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ 
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws --help
++
++usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
++To see help text, you can run:
++
++  aws help
++  aws <command> help
++  aws <command> <subcommand> help
++
++aws: error: the following arguments are required: command
++
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws configure
++AWS Access Key ID [****************D7D3]: AKIAZD2TUNF5R4UYIC2J
++AWS Secret Access Key [****************pMeH]: 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
++Default region name [ap-south-1]: us-east-1
++Default output format [table]: 
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 sync . s3://test202323232
++upload: .git\description to s3://test202323232/.git/description    
++upload: .git\hooks\pre-merge-commit.sample to s3://test202323232/.git/hooks/pre-merge-commit.sample
++upload: .git\hooks\pre-push.sample to s3://test202323232/.git/hooks/pre-push.sample
++upload: .git\hooks\pre-rebase.sample to s3://test202323232/.git/hooks/pre-rebase.sample
++upload: .git\hooks\fsmonitor-watchman.sample to s3://test202323232/.git/hooks/fsmonitor-watchman.sample
++upload: .git\COMMIT_EDITMSG to s3://test202323232/.git/COMMIT_EDITMSG
++upload: .git\hooks\applypatch-msg.sample to s3://test202323232/.git/hooks/applypatch-msg.sample
++upload: .git\HEAD to s3://test202323232/.git/HEAD
++upload: .git\hooks\commit-msg.sample to s3://test202323232/.git/hooks/commit-msg.sample
++upload: .git\hooks\post-update.sample to s3://test202323232/.git/hooks/post-update.sample
++upload: .git\config to s3://test202323232/.git/config
++upload: .git\hooks\pre-commit.sample to s3://test202323232/.git/hooks/pre-commit.sample
++upload: .git\hooks\pre-receive.sample to s3://test202323232/.git/hooks/pre-receive.sample
++upload: .git\hooks\pre-applypatch.sample to s3://test202323232/.git/hooks/pre-applypatch.sample
++upload: .git\hooks\prepare-commit-msg.sample to s3://test202323232/.git/hooks/prepare-commit-msg.sample
++upload: .git\hooks\push-to-checkout.sample to s3://test202323232/.git/hooks/push-to-checkout.sample
++upload: .git\hooks\update.sample to s3://test202323232/.git/hooks/update.sample
++upload: .git\hooks\sendemail-validate.sample to s3://test202323232/.git/hooks/sendemail-validate.sample
++upload: .git\index to s3://test202323232/.git/index
++upload: .git\info\exclude to s3://test202323232/.git/info/exclude
++upload: .git\logs\HEAD to s3://test202323232/.git/logs/HEAD       
++upload: .git\logs\refs\heads\main to s3://test202323232/.git/logs/refs/heads/main
++upload: .git\logs\refs\remotes\origin\main to s3://test202323232/.git/logs/refs/remotes/origin/main
++upload: .git\objects\14\49b3afbf672e13cc3ec1132ebc2346f9926eea to s3://test202323232/.git/objects/14/49b3afbf672e13cc3ec1132ebc2346f9926eea
++upload: .git\objects\25\a1082f8cba2d704709ae99798bdfb977a4b4f0 to s3://test202323232/.git/objects/25/a1082f8cba2d704709ae99798bdfb977a4b4f0
++upload: .git\objects\3b\6db224660afb36545996b52c0b1ff2eab040e1 to s3://test202323232/.git/objects/3b/6db224660afb36545996b52c0b1ff2eab040e1
++upload: .git\objects\43\f2b400c705bbd48314137b94a80847430ba6f3 to s3://test202323232/.git/objects/43/f2b400c705bbd48314137b94a80847430ba6f3
++upload: .git\objects\4b\825dc642cb6eb9a060e54bf8d69288fbee4904 to s3://test202323232/.git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904
++upload: .git\objects\91\e6c47289f8f70fe921b1d540c7d9b648292a14 to s3://test202323232/.git/objects/91/e6c47289f8f70fe921b1d540c7d9b648292a14
++upload: .git\objects\a6\206ea7be50ff2c6ae0ded7dae14eda5831cda0 to s3://test202323232/.git/objects/a6/206ea7be50ff2c6ae0ded7dae14eda5831cda0
++upload: .git\objects\e6\9de29bb2d1d6434b8b29ae775ad8c2e48c5391 to s3://test202323232/.git/objects/e6/9de29bb2d1d6434b8b29ae775ad8c2e48c5391
++upload: .git\objects\c0\5da4e236d449a3a79c3c3ca4faef70d61bd640 to s3://test202323232/.git/objects/c0/5da4e236d449a3a79c3c3ca4faef70d61bd640
++upload: .git\refs\heads\main to s3://test202323232/.git/refs/heads/main
++upload: .git\objects\eb\ad73c78eb9a509af44a1375f1356a5ebed2f22 to s3://test202323232/.git/objects/eb/ad73c78eb9a509af44a1375f1356a5ebed2f22
++upload: .git\refs\remotes\origin\main to s3://test202323232/.git/refs/remotes/origin/main
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 ls s3://test202323232
++                           PRE .git/
++2023-10-13 03:48:57        846 ec2-instance-root.yaml
++2023-10-13 03:48:57        944 ssh-security-group-nested.yaml
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 presign s3://test202323232/ec2-instance-root.yaml
++https://test202323232.s3.us-east-1.amazonaws.com/ec2-instance-root.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T042810Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=cbe7eb37bdf54d41fce279b589111d2d1b5a949ba9d5330d9dfcf34b81a59d91
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$ aws s3 presign s3://test202323232/ssh-security-group-nested.yaml
++https://test202323232.s3.us-east-1.amazonaws.com/ssh-security-group-nested.yaml?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZD2TUNF5R4UYIC2J%2F20231013%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T042839Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=05edf15e1f09cc67435230b2caf805b5a3d58337d5d0a4f915a790cde32eea54
++
++Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
++$
+\ No newline at end of file
+diff --git a/ssh-security-group-nested.yaml b/ssh-security-group-nested.yaml
+index ebad73c..bed800d 100644
+--- a/ssh-security-group-nested.yaml
++++ b/ssh-security-group-nested.yaml
+@@ -4,7 +4,7 @@ Parameters:
+     Type: String
+   VPCId:
+     Description: VPC to create the security group into
+-    Type: AWS::EC2::VPC::Id
++    Type: String
+   
+ Resources:
+   SSHSecurityGroup:
+
+commit 43f2b400c705bbd48314137b94a80847430ba6f3
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 05:09:52 2023 +0100
+
+    test 1
+
+diff --git a/test1.yml b/test1.yml
+deleted file mode 100644
+index e69de29..0000000
+
+commit c05da4e236d449a3a79c3c3ca4faef70d61bd640
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 05:02:03 2023 +0100
+
+    Ec2 + Security group nested v1
+
+diff --git a/ec2-instance-root.yaml b/ec2-instance-root.yaml
+new file mode 100644
+index 0000000..a6206ea
+--- /dev/null
++++ b/ec2-instance-root.yaml
+@@ -0,0 +1,33 @@
++Parameters:
++  VPCId:
++    Description: VPC to create the security group and EC2 instance into
++    Type: AWS::EC2::VPC::Id
++
++  TemplateURL:
++    Description: URL of the nested stack template
++    Type: String
++
++  ImageId:
++    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
++    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
++
++
++Resources:
++  SSHSecurityGroupStack:
++    Type: AWS::CloudFormation::Stack
++    Properties:
++      TemplateURL: !Ref TemplateURL
++      Parameters:
++        ApplicationName: !Ref AWS::StackName
++        VPCId: !Ref VPCId
++      TimeoutInMinutes: 5
++
++  EC2Instance:
++    Type: AWS::EC2::Instance
++    Properties:
++      InstanceType: t2.micro
++      # Note we use the pseudo parameter AWS::Region
++      ImageId: !Ref ImageId
++      SecurityGroupIds:
++        - !GetAtt SSHSecurityGroupStack.Outputs.SSHGroupId
++
+diff --git a/ssh-security-group-nested.yaml b/ssh-security-group-nested.yaml
+new file mode 100644
+index 0000000..ebad73c
+--- /dev/null
++++ b/ssh-security-group-nested.yaml
+@@ -0,0 +1,35 @@
++Parameters:
++  ApplicationName:
++    Description: The application name
++    Type: String
++  VPCId:
++    Description: VPC to create the security group into
++    Type: AWS::EC2::VPC::Id
++  
++Resources:
++  SSHSecurityGroup:
++    Type: AWS::EC2::SecurityGroup
++    Properties:
++      GroupDescription: !Sub Security group for ${ApplicationName}
++      SecurityGroupIngress:
++        - CidrIp: "10.0.0.0/25"
++          FromPort: 22
++          ToPort: 22
++          IpProtocol: tcp
++          Description: SSH for Engineering department
++        - CidrIp: "192.168.0.0/25"
++          FromPort: 22
++          ToPort: 22
++          IpProtocol: tcp
++          Description: SSH for HR department
++        - CidrIp: "172.16.0.0/31"
++          FromPort: 22
++          ToPort: 22
++          IpProtocol: tcp
++          Description: SSH for Finance department
++      VpcId: !Ref VPCId
++
++Outputs:
++  SSHGroupId:
++    Value: !Ref SSHSecurityGroup
++    Description: Id for the SSH Security Group
+\ No newline at end of file
+
+commit 25a1082f8cba2d704709ae99798bdfb977a4b4f0
+Author: Peter <p.magdytab@gmail.com>
+Date:   Fri Oct 13 04:57:23 2023 +0100
+
+    empty file
+
+diff --git a/test1.yml b/test1.yml
+new file mode 100644
+index 0000000..e69de29

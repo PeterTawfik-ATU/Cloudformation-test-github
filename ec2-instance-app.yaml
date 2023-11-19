@@ -1,0 +1,79 @@
+Parameters:
+  VPCId:
+    Description: VPC to create resources into
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-0d86fa5a2532aed7b
+
+  ImageId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+  SecurityGroupIds:
+    Description: List of Security Group IDs for the EC2 instance
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Default: sg-0ad672251f521e5e7
+
+  PrivateSubnet1Id:
+    Description: ID of the first private subnet
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-095e061d638ff797f
+
+  PrivateSubnet2Id:
+    Description: ID of the second private subnet
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-09d240aa78ce751e7
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: !Ref ImageId
+      SecurityGroupIds: !Ref SecurityGroupIds
+      SubnetId: !Ref PrivateSubnet1Id  # Choose the private subnet for the instance
+
+  PrivateSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet1Id
+
+  PrivateSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet2Id
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPCId
+
+  MyAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier: [!Ref PrivateSubnet1Id, !Ref PrivateSubnet2Id]  # Choose private subnets for Auto Scaling Group
+      LaunchConfigurationName: !Ref MyLaunchConfig
+      MinSize: "1"
+      MaxSize: "3"
+      DesiredCapacity: "2"
+
+  MyLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: !Ref ImageId
+      InstanceType: t2.micro
+      SecurityGroups: !Ref SecurityGroupIds
+      UserData: !Base64
+        Fn::Sub: |
+          #!/bin/bash
+          # Add your user data script here
+
+Outputs:
+  EC2InstanceId:
+    Description: "ID of the created EC2 instance"
+    Value: !Ref EC2Instance
+
+  AutoScalingGroupId:
+    Description: "ID of the Auto Scaling Group"
+    Value: !Ref MyAutoScalingGroup

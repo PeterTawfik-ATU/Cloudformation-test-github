@@ -48,10 +48,16 @@ Parameters:
     Type: String
     Default: 10.192.23.0/24
 
+  FixedVpcId:
+    Description: 'Fixed VPC ID to use in the stack'
+    Type: String
+    Default: 'vpc-00186456'  # Set your desired fixed VPC ID
+
 Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
+      VpcId: !Ref FixedVpcId
       CidrBlock: !Ref VpcCIDR
       EnableDnsSupport: true
       EnableDnsHostnames: true

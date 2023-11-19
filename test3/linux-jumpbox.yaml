@@ -1,0 +1,46 @@
+Parameters:
+  NameSpace:
+    Type: String
+    Description: Namespace used for variables
+
+  BoxName:
+    Type: String
+    Description: Name of the Linux Jump Box
+
+  KeyPairName:
+    Type: String
+    Description: Name of the Key Pair
+
+  PrivateIP:
+    Type: String
+    Description: Private IP address for the Linux Jump Box
+
+  ec2size:
+    Type: String
+    Description: Size of the EC2 instance
+
+  AMI:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+
+  VPCID:
+    Type: AWS::EC2::VPC::Id
+    Default: !ImportValue
+      Fn::Sub: "${NameSpace}-VPCID"
+
+Resources:
+  LinuxJumpBox:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref ec2size
+      ImageId: !Ref AMI
+      KeyName: !Ref KeyPairName
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: false
+          DeviceIndex: 0
+          GroupSet:
+            - Fn::ImportValue: !Sub "${NameSpace}-JumpLxSG"
+          SubnetId: Fn::ImportValue: !Sub "${NameSpace}-PrivateSubnet1"
+          PrivateIpAddress: !Ref PrivateIP
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameSpace}-${BoxName}
