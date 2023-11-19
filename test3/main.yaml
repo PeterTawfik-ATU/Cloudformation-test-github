@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This template creates a nested stack for VPC, security group, and Linux machine.
+Parameters:
+  EnvironmentName:
+    Description: An environment name that is prefixed to resource names
+    Type: String
+    Default: VPC-Peter
+Resources:
+  VPCStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: 'https://s3.amazonaws.com/cf-network-l00186456/vpc.yaml'
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        VpcCIDR: '10.192.0.0/16'
+        PublicSubnet1CIDR: '10.192.10.0/24'
+        PublicSubnet2CIDR: '10.192.11.0/24'
+        PrivateSubnet1CIDR: '10.192.20.0/24'
+        PrivateSubnet2CIDR: '10.192.21.0/24'
+  SecurityGroupStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: 'https://s3.amazonaws.com/cf-network-l00186456/securitygroup.yaml'
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        VPCID: !GetAtt VPCStack.Outputs.VPCID
+  LinuxMachineStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: 'https://s3.amazonaws.com/cf-network-l00186456/linuxmachine.yaml'
+      Parameters:
+        EnvironmentName: !Ref EnvironmentName
+        ImageId: ami-0a9d27a9f4f5c0efc
+        InstanceType: t2.micro
+        KeyName: mykey
+        PrivateIP: '10.192.20.10'
+        SecurityGroupID: !GetAtt SecurityGroupStack.Outputs.LinuxSecurityGroupID
+        SubnetID: !GetAtt VPCStack.Outputs.PrivateSubnet1ID
+Outputs:
+  LinuxMachineID:
+    Description: Export Linux Machine ID
+    Value: !GetAtt LinuxMachineStack.Outputs.LinuxMachineID
+    Export:
+      Name: !Sub "${EnvironmentName}-LinuxMachineID"

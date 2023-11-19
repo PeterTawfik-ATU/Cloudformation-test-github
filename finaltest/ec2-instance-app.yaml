@@ -1,0 +1,41 @@
+Parameters:
+  VPCIdURL:
+    Description: VPC to create the security group and EC2 instance into
+    Type: String
+
+  SGTemplateURL:
+    Description: Security Group URL nested stack template
+    Type: String
+
+  ImageId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+
+Resources:
+  SSHSecurityGroupStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Ref SGTemplateURL
+      Parameters:
+        ApplicationName: !Ref AWS::StackName
+        VPCId: !GetAtt VPC.Outputs.VPC
+      TimeoutInMinutes: 5
+
+  VPC:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Ref VPCIdURL
+      Parameters:
+        EnvironmentName: !Ref AWS::StackName
+
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      # Note we use the pseudo parameter AWS::Region
+      ImageId: !Ref ImageId
+      SecurityGroupIds:
+        - !GetAtt Ec2SSHSecurityGroupStack.Outputs.SSHGroupId
+      SubnetId: !GetAtt VPC.Outputs.PublicSubnet1

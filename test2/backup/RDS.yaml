@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MyDB:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+        DBInstanceIdentifier: MySQL-testDB
+        AllocatedStorage: 20
+        DBInstanceClass: db.t3.small
+        Engine: "MYSQL"
+        MasterUsername: !Ref MasterUsername
+        MasterUserPassword: !Ref MasterUserPassword
+        BackupRetentionPeriod: 0
+        MultiAZ: true
+        EngineVersion: 8.0.20
+        AutoMinorVersionUpgrade: true
+        PubliclyAccessible: false
+        StorageType: gp2
+        Port: 3306
+        StorageEncrypted: true
+        CopyTagsToSnapshot: true
+        EnableIAMDatabaseAuthentication: false
+        DeletionProtection: false
+        DBSubnetGroupName: !Ref RDSDBSubnetGroup
+        VPCSecurityGroups: 
+          - !Ref MySecurityGroup
+        MaxAllocatedStorage: 50
+        Tags: 
+          - Key: Name
+            Value: Peter-MySQL
+          - Key: createdBy
+            Value: L00186456

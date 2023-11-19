@@ -1,0 +1,38 @@
+Parameters:
+  VPCId:
+    Description: VPC to create resources into
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-0d86fa5a2532aed7b
+
+  ImageId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+  SecurityGroupIds:
+    Description: List of Security Group IDs for the EC2 instance
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Default: sg-0ad672251f521e5e7
+
+  PrivateSubnet1Id:
+    Description: ID of the first private subnet
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-095e061d638ff797f
+
+  PrivateSubnet2Id:
+    Description: ID of the second private subnet
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-09d240aa78ce751e7
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: !Ref ImageId
+      SecurityGroupIds: !Ref SecurityGroupIds
+      SubnetId: !Ref PrivateSubnet1Id  # Choose the public subnet for the instance
+
+Outputs:
+  EC2InstanceId:
+    Description: "ID of the created EC2 instance"
+    Value: !Ref EC2Instance
