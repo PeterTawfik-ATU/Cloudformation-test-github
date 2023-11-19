@@ -112,8 +112,8 @@ aws: error: the following arguments are required: command
 
 Peter@Peter-pc MINGW64 /d/Diploma/Cloudformation-test-github (main)
 $ aws configure
-AWS Access Key ID [****************D7D3]: AKIAZD2TUNF5R4UYIC2J
-AWS Secret Access Key [****************pMeH]: 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
+AWS Access Key ID [****************D7D3]: 
+AWS Secret Access Key [****************pMeH]: 
 Default region name [ap-south-1]: us-east-1
 Default output format [table]: 
 
